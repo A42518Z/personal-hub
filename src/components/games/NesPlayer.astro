@@ -1,0 +1,374 @@
+---
+interface Props {
+  title?: string;
+  romUrl?: string;
+  description?: string;
+}
+
+const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会在浏览器本地读取，不会上传到服务器。' } = Astro.props;
+---
+
+<section class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]" data-nes-root data-rom-url={romUrl} data-rom-title={title}>
+  <div class="overflow-hidden rounded-[2rem] border border-slate-800 bg-slate-950 shadow-2xl shadow-cyan-950/30">
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 px-5 py-4">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-300">NES Player</p>
+        <h2 class="mt-1 text-xl font-bold text-white">{title}</h2>
+      </div>
+      <span data-nes-status class="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-cyan-100">{romUrl ? '等待加载' : '等待上传'}</span>
+    </div>
+
+    <div class="space-y-5 p-5">
+      <label class="block rounded-3xl border border-dashed border-cyan-400/50 bg-cyan-400/5 p-5 text-center transition hover:border-cyan-300 hover:bg-cyan-400/10">
+        <span class="block text-sm font-semibold text-cyan-100">选择一个合法的 .nes 文件</span>
+        <span class="mt-2 block text-xs leading-6 text-slate-400">{romUrl ? '点击加载内置 ROM，或上传本地 ROM 作为替代。' : description}</span>
+        <input data-nes-file class="sr-only" type="file" accept=".nes,application/octet-stream" />
+      </label>
+
+      <div class="relative mx-auto aspect-[256/240] w-full max-w-[768px] overflow-hidden rounded-3xl border border-white/10 bg-black">
+        <canvas data-nes-canvas class="h-full w-full image-render-pixelated"></canvas>
+        <div data-nes-overlay class="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-slate-950/85 px-6 text-center backdrop-blur-sm">
+          <span data-nes-overlay-title class="rounded-full bg-cyan-400 px-5 py-2 text-sm font-bold text-slate-950">{romUrl ? '点击下方按钮加载游戏' : '上传 ROM 后开始'}</span>
+          <span data-nes-message class="max-w-md text-sm leading-6 text-slate-300">{romUrl ? '进入页面不会自动下载 ROM；点击“加载游戏”后才开始下载。' : '先上传合法 ROM，再点击开始运行。'}</span>
+        </div>
+      </div>
+
+      <div class="space-y-3 rounded-3xl border border-white/10 bg-white/5 p-4">
+        <div class="flex items-center justify-between gap-3 text-xs font-medium text-slate-300">
+          <span data-nes-stage>等待操作</span>
+          <span data-nes-progress-text>0%</span>
+        </div>
+        <div class="h-2 overflow-hidden rounded-full bg-slate-800">
+          <div data-nes-progress class="h-full w-0 rounded-full bg-cyan-400 transition-all duration-200"></div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button data-nes-primary type="button" class="rounded-full bg-cyan-400 px-5 py-2 text-sm font-bold text-slate-950 transition hover:bg-cyan-300 disabled:cursor-not-allowed disabled:opacity-50">{romUrl ? '加载游戏' : '等待上传'}</button>
+        <button data-nes-reset type="button" disabled class="rounded-full border border-white/15 px-5 py-2 text-sm font-semibold text-slate-100 transition hover:border-cyan-300 hover:text-cyan-200 disabled:cursor-not-allowed disabled:opacity-40">重置</button>
+      </div>
+    </div>
+  </div>
+
+  <aside class="space-y-5 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div>
+      <p class="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-600 dark:text-cyan-300">Controls</p>
+      <h3 class="mt-3 text-2xl font-bold text-slate-950 dark:text-white">键位说明</h3>
+      <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">加载完成后点击开始，再使用键盘操作。第一版暂不提供移动端虚拟手柄。</p>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
+      <table class="w-full text-left text-sm"><tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+        <tr><th class="bg-slate-50 px-4 py-3 font-semibold text-slate-900 dark:bg-slate-950 dark:text-white">方向</th><td class="px-4 py-3 text-slate-600 dark:text-slate-300">WASD / 方向键</td></tr>
+        <tr><th class="bg-slate-50 px-4 py-3 font-semibold text-slate-900 dark:bg-slate-950 dark:text-white">A</th><td class="px-4 py-3 text-slate-600 dark:text-slate-300">K</td></tr>
+        <tr><th class="bg-slate-50 px-4 py-3 font-semibold text-slate-900 dark:bg-slate-950 dark:text-white">B</th><td class="px-4 py-3 text-slate-600 dark:text-slate-300">J</td></tr>
+        <tr><th class="bg-slate-50 px-4 py-3 font-semibold text-slate-900 dark:bg-slate-950 dark:text-white">Start</th><td class="px-4 py-3 text-slate-600 dark:text-slate-300">1</td></tr>
+        <tr><th class="bg-slate-50 px-4 py-3 font-semibold text-slate-900 dark:bg-slate-950 dark:text-white">Select</th><td class="px-4 py-3 text-slate-600 dark:text-slate-300">2</td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="rounded-2xl bg-cyan-50 p-4 text-sm leading-6 text-cyan-900 dark:bg-cyan-500/10 dark:text-cyan-100">
+      内置游戏不会在进入页面时自动下载。下载失败或模拟器不支持时，可以上传本地 ROM 继续游玩。
+    </div>
+  </aside>
+</section>
+
+<script>
+  import { Controller, NES } from 'jsnes';
+  import type { ButtonKey } from 'jsnes';
+
+  type PlayerState = 'idle' | 'downloading' | 'initializing' | 'ready' | 'running' | 'paused' | 'error';
+
+  const root = document.querySelector<HTMLElement>('[data-nes-root]');
+  const canvas = document.querySelector<HTMLCanvasElement>('[data-nes-canvas]');
+  const fileInput = document.querySelector<HTMLInputElement>('[data-nes-file]');
+  const overlay = document.querySelector<HTMLElement>('[data-nes-overlay]');
+  const overlayTitle = document.querySelector<HTMLElement>('[data-nes-overlay-title]');
+  const primaryButton = document.querySelector<HTMLButtonElement>('[data-nes-primary]');
+  const resetButton = document.querySelector<HTMLButtonElement>('[data-nes-reset]');
+  const statusLabel = document.querySelector<HTMLElement>('[data-nes-status]');
+  const message = document.querySelector<HTMLElement>('[data-nes-message]');
+  const stageLabel = document.querySelector<HTMLElement>('[data-nes-stage]');
+  const progressText = document.querySelector<HTMLElement>('[data-nes-progress-text]');
+  const progressBar = document.querySelector<HTMLElement>('[data-nes-progress]');
+
+  const builtInRomUrl = root?.dataset.romUrl || '';
+  const builtInRomTitle = root?.dataset.romTitle || '内置 ROM';
+  const width = 256;
+  const height = 240;
+  const frameTime = 1000 / 60.0988;
+  const audioBufferSize = 4096;
+  const minBufferedSamples = 2048;
+  const audioL: number[] = [];
+  const audioR: number[] = [];
+
+  let state: PlayerState = 'idle';
+  let nes: NES | undefined;
+  let ctx: CanvasRenderingContext2D | null = null;
+  let imageData: ImageData | undefined;
+  let audioContext: AudioContext | undefined;
+  let scriptProcessor: ScriptProcessorNode | undefined;
+  let animationFrame: number | undefined;
+  let lastFrameTime = 0;
+
+  const keyMap: Record<string, ButtonKey> = {
+    w: Controller.BUTTON_UP, W: Controller.BUTTON_UP, ArrowUp: Controller.BUTTON_UP,
+    a: Controller.BUTTON_LEFT, A: Controller.BUTTON_LEFT, ArrowLeft: Controller.BUTTON_LEFT,
+    s: Controller.BUTTON_DOWN, S: Controller.BUTTON_DOWN, ArrowDown: Controller.BUTTON_DOWN,
+    d: Controller.BUTTON_RIGHT, D: Controller.BUTTON_RIGHT, ArrowRight: Controller.BUTTON_RIGHT,
+    j: Controller.BUTTON_B, J: Controller.BUTTON_B, k: Controller.BUTTON_A, K: Controller.BUTTON_A,
+    1: Controller.BUTTON_START, 2: Controller.BUTTON_SELECT,
+  };
+
+  function formatBytes(bytes: number) {
+    return bytes >= 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)} MB` : `${Math.round(bytes / 1024)} KB`;
+  }
+
+  function setText(el: HTMLElement | null, text: string) {
+    if (el) el.textContent = text;
+  }
+
+  function setProgress(percent: number | null, downloaded = 0, total = 0) {
+    if (!progressBar || !progressText) return;
+    if (percent === null) {
+      progressBar.style.width = '35%';
+      progressBar.classList.add('animate-pulse');
+      progressText.textContent = downloaded ? `${formatBytes(downloaded)}` : '处理中';
+      return;
+    }
+    progressBar.classList.remove('animate-pulse');
+    progressBar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+    progressText.textContent = total ? `${Math.round(percent)}% · ${formatBytes(downloaded)} / ${formatBytes(total)}` : `${Math.round(percent)}%`;
+  }
+
+  function setState(next: PlayerState, detail = '') {
+    state = next;
+    const labels: Record<PlayerState, string> = {
+      idle: builtInRomUrl ? '等待加载' : '等待上传',
+      downloading: '下载中',
+      initializing: '初始化中',
+      ready: '已准备',
+      running: '运行中',
+      paused: '已暂停',
+      error: '加载失败',
+    };
+    setText(statusLabel, labels[next]);
+    setText(stageLabel, detail || labels[next]);
+    if (primaryButton) {
+      primaryButton.disabled = next === 'downloading' || next === 'initializing' || (!builtInRomUrl && next === 'idle');
+      primaryButton.textContent = next === 'idle' ? (builtInRomUrl ? '加载游戏' : '等待上传') : next === 'downloading' || next === 'initializing' ? '加载中...' : next === 'ready' ? '开始游戏' : next === 'running' ? '暂停' : next === 'paused' ? '继续' : '重新加载';
+    }
+    if (resetButton) resetButton.disabled = !(next === 'ready' || next === 'running' || next === 'paused');
+    if (overlay) overlay.classList.toggle('hidden', next === 'running');
+    if (overlayTitle) overlayTitle.textContent = next === 'ready' ? '准备好了' : next === 'running' ? '运行中' : next === 'paused' ? '已暂停' : next === 'error' ? '加载失败' : builtInRomUrl ? '点击加载游戏' : '上传 ROM 后开始';
+  }
+
+  function initCanvas() {
+    if (!canvas) return;
+    canvas.width = width;
+    canvas.height = height;
+    ctx = canvas.getContext('2d');
+    if (ctx) imageData = ctx.createImageData(width, height);
+  }
+
+  function drawFrame(frameBuffer: Uint32Array) {
+    if (!ctx || !imageData) return;
+    const buffer = imageData.data;
+    for (let i = 0; i < width * height; i += 1) {
+      const pixel = frameBuffer[i];
+      buffer[i * 4] = pixel & 0xff;
+      buffer[i * 4 + 1] = (pixel >> 8) & 0xff;
+      buffer[i * 4 + 2] = (pixel >> 16) & 0xff;
+      buffer[i * 4 + 3] = 0xff;
+    }
+    ctx.putImageData(imageData, 0, 0);
+  }
+
+  function createAudio() {
+    if (audioContext) return;
+    const AudioContextConstructor = window.AudioContext || (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+    if (!AudioContextConstructor) return;
+    audioContext = new AudioContextConstructor({ latencyHint: 'interactive' });
+    scriptProcessor = audioContext.createScriptProcessor(audioBufferSize, 0, 2);
+    scriptProcessor.onaudioprocess = (event: AudioProcessingEvent) => {
+      const left = event.outputBuffer.getChannelData(0);
+      const right = event.outputBuffer.getChannelData(1);
+      if (audioL.length < minBufferedSamples || audioR.length < minBufferedSamples) {
+        left.fill(0); right.fill(0); return;
+      }
+      for (let i = 0; i < left.length; i += 1) {
+        left[i] = audioL.shift() || 0;
+        right[i] = audioR.shift() || 0;
+      }
+    };
+    scriptProcessor.connect(audioContext.destination);
+  }
+
+  function createNes() {
+    audioL.length = 0;
+    audioR.length = 0;
+    nes = new NES({
+      onFrame: drawFrame,
+      onAudioSample(left, right) {
+        if (audioL.length > audioBufferSize * 4) {
+          audioL.splice(0, audioL.length - audioBufferSize * 2);
+          audioR.splice(0, audioR.length - audioBufferSize * 2);
+        }
+        audioL.push(left);
+        audioR.push(right);
+      },
+    });
+  }
+
+  function stopLoop(next: PlayerState = 'paused') {
+    if (animationFrame) window.cancelAnimationFrame(animationFrame);
+    animationFrame = undefined;
+    lastFrameTime = 0;
+    if (state === 'running') setState(next, next === 'paused' ? '已暂停' : '等待操作');
+  }
+
+  function loop(time: number) {
+    if (state !== 'running' || !nes) return;
+    animationFrame = window.requestAnimationFrame(loop);
+    if (!lastFrameTime || time - lastFrameTime >= frameTime) {
+      lastFrameTime = time;
+      nes.frame();
+    }
+  }
+
+  async function start() {
+    if (!nes || !(state === 'ready' || state === 'paused')) return;
+    createAudio();
+    if (audioContext?.state === 'suspended') await audioContext.resume();
+    setState('running', '运行中');
+    animationFrame = window.requestAnimationFrame(loop);
+  }
+
+  function reset() {
+    if (!nes) return;
+    stopLoop('paused');
+    nes.reset();
+    setProgress(100);
+    setText(message, '已重置，点击继续运行。');
+    setState('paused', '已重置');
+  }
+
+  function loadBytes(bytes: Uint8Array, label: string) {
+    try {
+      stopLoop('idle');
+      setState('initializing', '初始化模拟器');
+      setProgress(null);
+      setText(message, `正在初始化 ${label}`);
+      createNes();
+      if (!nes) throw new Error('init failed');
+      nes.loadROM(bytes);
+      setProgress(100, bytes.length, bytes.length);
+      setText(message, 'ROM 已加载，点击开始游戏。');
+      setState('ready', '已准备');
+    } catch {
+      setProgress(0);
+      setText(message, '当前模拟器暂不支持这个 ROM，或 ROM 文件已损坏。可以上传本地 ROM 继续尝试。');
+      setState('error', '模拟器不支持');
+    }
+  }
+
+  async function readResponseBytes(response: Response) {
+    const total = Number(response.headers.get('content-length') || 0);
+    if (!response.body) {
+      setProgress(null);
+      return new Uint8Array(await response.arrayBuffer());
+    }
+    const reader = response.body.getReader();
+    const chunks: Uint8Array[] = [];
+    let received = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (!value) continue;
+      chunks.push(value);
+      received += value.length;
+      setProgress(total ? (received / total) * 100 : null, received, total);
+    }
+    const result = new Uint8Array(received);
+    let offset = 0;
+    for (const chunk of chunks) {
+      result.set(chunk, offset);
+      offset += chunk.length;
+    }
+    return result;
+  }
+
+  async function loadBuiltInRom() {
+    if (!builtInRomUrl) return;
+    try {
+      setState('downloading', '下载 ROM');
+      setProgress(0);
+      setText(message, `正在下载 ${builtInRomTitle}`);
+      const response = await fetch(builtInRomUrl);
+      if (response.status === 404) throw new Error('not_found');
+      if (!response.ok) throw new Error('http_error');
+      const bytes = await readResponseBytes(response);
+      loadBytes(bytes, builtInRomTitle);
+    } catch (error) {
+      setProgress(0);
+      setText(message, error instanceof Error && error.message === 'not_found' ? 'ROM 文件不存在，请检查静态资源路径。' : '网络异常，ROM 下载失败。可以重试或上传本地 ROM。');
+      setState('error', '下载失败');
+    }
+  }
+
+  async function loadFile(file: File | undefined) {
+    if (!file) return;
+    try {
+      setState('initializing', '读取本地文件');
+      setProgress(null, file.size, file.size);
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      loadBytes(bytes, file.name);
+    } catch {
+      setText(message, '本地文件读取失败，请重新选择 ROM。');
+      setState('error', '读取失败');
+    }
+  }
+
+  async function handlePrimary() {
+    if (state === 'idle' || state === 'error') return loadBuiltInRom();
+    if (state === 'ready' || state === 'paused') return start();
+    if (state === 'running') return stopLoop('paused');
+  }
+
+  function handleKeyDown(event: KeyboardEvent) {
+    const button = keyMap[event.key];
+    if (!nes || state !== 'running' || button === undefined) return;
+    event.preventDefault();
+    nes.buttonDown(1, button);
+  }
+
+  function handleKeyUp(event: KeyboardEvent) {
+    const button = keyMap[event.key];
+    if (!nes || button === undefined) return;
+    event.preventDefault();
+    nes.buttonUp(1, button);
+  }
+
+  initCanvas();
+  setState('idle', builtInRomUrl ? '等待加载' : '等待上传');
+  setProgress(0);
+  fileInput?.addEventListener('change', (event) => {
+    const target = event.target;
+    loadFile(target instanceof HTMLInputElement ? target.files?.[0] : undefined);
+  });
+  primaryButton?.addEventListener('click', handlePrimary);
+  resetButton?.addEventListener('click', reset);
+  window.addEventListener('keydown', handleKeyDown);
+  window.addEventListener('keyup', handleKeyUp);
+  document.addEventListener('astro:before-swap', () => {
+    stopLoop('idle');
+    scriptProcessor?.disconnect();
+    audioContext?.close();
+    window.removeEventListener('keydown', handleKeyDown);
+    window.removeEventListener('keyup', handleKeyUp);
+  });
+</script>
+
+<style>
+  .image-render-pixelated { image-rendering: pixelated; }
+</style>

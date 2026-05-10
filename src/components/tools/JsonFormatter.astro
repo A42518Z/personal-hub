@@ -1,0 +1,87 @@
+---
+---
+
+<article id="json" class="scroll-mt-28 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h3 class="text-xl font-bold text-slate-950 dark:text-white">JSON 格式化</h3>
+      <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">格式化、压缩和校验 JSON，错误时会提示解析位置。</p>
+    </div>
+    <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">ready</span>
+  </div>
+
+  <div class="mt-5 grid gap-4 lg:grid-cols-2">
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">输入 JSON</span>
+      <textarea id="json-input" class="min-h-72 w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 font-mono text-sm text-slate-900 outline-none focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:ring-cyan-500/10"></textarea>
+    </label>
+
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">输出结果</span>
+      <textarea id="json-output" class="min-h-72 w-full rounded-2xl border border-slate-200 bg-slate-950 p-4 font-mono text-sm text-cyan-100 outline-none dark:border-slate-700" readonly></textarea>
+    </label>
+  </div>
+
+  <div class="mt-4 flex flex-wrap gap-3">
+    <button id="json-format" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white dark:bg-white dark:text-slate-950" type="button">格式化</button>
+    <button id="json-minify" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-200" type="button">压缩</button>
+    <button id="json-copy" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-200" type="button">复制结果</button>
+  </div>
+
+  <p id="json-message" class="mt-4 text-sm text-slate-500 dark:text-slate-400" aria-live="polite"></p>
+</article>
+
+<script is:inline>
+  const initJsonFormatter = () => {
+    const root = document.querySelector('#json');
+    if (!root || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const input = root.querySelector('#json-input');
+    const output = root.querySelector('#json-output');
+    const message = root.querySelector('#json-message');
+    const formatButton = root.querySelector('#json-format');
+    const minifyButton = root.querySelector('#json-minify');
+    const copyButton = root.querySelector('#json-copy');
+
+    if (input && !input.value) {
+      input.value = JSON.stringify({ name: 'personal-hub', tools: ['json', 'base64', 'markdown'] }, null, 2);
+    }
+
+    const setMessage = (text, isError = false) => {
+      if (!message) return;
+      message.textContent = text;
+      message.classList.toggle('text-rose-600', isError);
+      message.classList.toggle('dark:text-rose-300', isError);
+      message.classList.toggle('text-slate-500', !isError);
+      message.classList.toggle('dark:text-slate-400', !isError);
+    };
+
+    const transformJson = (space) => {
+      if (!input || !output) return;
+
+      try {
+        const parsed = JSON.parse(input.value);
+        output.value = JSON.stringify(parsed, null, space);
+        const size = new Blob([output.value]).size;
+        setMessage(`校验通过，输出大小 ${size} bytes。`);
+      } catch (error) {
+        const detail = error instanceof Error ? error.message : '未知错误';
+        setMessage(`JSON 解析失败：${detail}`, true);
+      }
+    };
+
+    formatButton?.addEventListener('click', () => transformJson(2));
+    minifyButton?.addEventListener('click', () => transformJson(0));
+    copyButton?.addEventListener('click', async () => {
+      if (!output?.value) return;
+      await navigator.clipboard?.writeText(output.value);
+      setMessage('结果已复制到剪贴板。');
+    });
+
+    transformJson(2);
+  };
+
+  initJsonFormatter();
+  document.addEventListener('astro:page-load', initJsonFormatter);
+</script>

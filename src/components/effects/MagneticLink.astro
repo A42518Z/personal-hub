@@ -1,0 +1,35 @@
+---
+const { href = '#', text = 'Explore', target } = Astro.props as { href?: string; text?: string; target?: string };
+---
+
+<a
+  href={href}
+  target={target}
+  class="magnetic-link inline-flex items-center justify-center rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-xl shadow-slate-300/60 transition hover:bg-cyan-600 dark:bg-white dark:text-slate-950 dark:shadow-none dark:hover:bg-cyan-200"
+>
+  <span>{text}</span>
+</a>
+
+<script>
+  document.querySelectorAll('.magnetic-link').forEach((link) => {
+    const strength = 0.22;
+
+    link.addEventListener('pointermove', (event) => {
+      const pointerEvent = event as PointerEvent;
+      const rect = link.getBoundingClientRect();
+      const x = pointerEvent.clientX - rect.left - rect.width / 2;
+      const y = pointerEvent.clientY - rect.top - rect.height / 2;
+      link.animate(
+        { transform: `translate(${x * strength}px, ${y * strength}px)` },
+        { duration: 260, fill: 'forwards', easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+      );
+    });
+
+    link.addEventListener('pointerleave', () => {
+      link.animate(
+        { transform: 'translate(0, 0)' },
+        { duration: 500, fill: 'forwards', easing: 'cubic-bezier(0.22, 1, 0.36, 1)' }
+      );
+    });
+  });
+</script>

@@ -1,0 +1,23 @@
+---
+import JsonFormatter from './JsonFormatter.astro';
+import Base64Converter from './Base64Converter.astro';
+import MarkdownPreview from './MarkdownPreview.astro';
+import TimestampConverter from './TimestampConverter.astro';
+import RegexTester from './RegexTester.astro';
+---
+
+<section class="space-y-6">
+  <div>
+    <p class="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-600 dark:text-cyan-300">Interactive tools</p>
+    <h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-950 dark:text-white">可用工具</h2>
+    <p class="mt-3 text-slate-600 dark:text-slate-300">这些工具都在浏览器本地运行，不会把输入内容发送到服务器。</p>
+  </div>
+
+  <div class="space-y-8">
+    <JsonFormatter />
+    <Base64Converter />
+    <MarkdownPreview />
+    <TimestampConverter />
+    <RegexTester />
+  </div>
+</section>

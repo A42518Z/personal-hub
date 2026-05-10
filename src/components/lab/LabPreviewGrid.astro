@@ -1,0 +1,29 @@
+---
+import { labs } from '~/data/hub';
+---
+
+<section class="space-y-6">
+  <div>
+    <p class="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-600 dark:text-cyan-300">Experiments</p>
+    <h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-950 dark:text-white">实验预览</h2>
+    <p class="mt-3 text-slate-600 dark:text-slate-300">先给每个实验一个明确落点，后续再逐步替换成 Canvas、WebGL 或 Motion 真实效果。</p>
+  </div>
+
+  <div class="grid gap-5 md:grid-cols-2">
+    {
+      labs.map((lab) => (
+        <article id={lab.href.split('#')[1]} class="scroll-mt-28 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div class="relative h-40 bg-slate-950">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(34,211,238,0.45),transparent_28%),radial-gradient(circle_at_70%_60%,rgba(168,85,247,0.35),transparent_32%)]"></div>
+            <div class="absolute bottom-4 left-4 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-cyan-100 backdrop-blur">{lab.badge}</div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-slate-950 dark:text-white">{lab.title}</h3>
+            <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{lab.description}</p>
+            <p class="mt-5 text-sm font-semibold text-cyan-700 dark:text-cyan-300">当前状态：待实现真实 Demo</p>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>

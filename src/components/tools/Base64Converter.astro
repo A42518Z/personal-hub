@@ -1,0 +1,82 @@
+---
+---
+
+<article id="base64" class="scroll-mt-28 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h3 class="text-xl font-bold text-slate-950 dark:text-white">Base64 转换</h3>
+      <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">支持 Unicode 文本的 Base64 编码和解码。</p>
+    </div>
+    <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">ready</span>
+  </div>
+
+  <div class="mt-5 grid gap-4 lg:grid-cols-2">
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">输入</span>
+      <textarea id="base64-input" class="min-h-56 w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 font-mono text-sm text-slate-900 outline-none focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:ring-cyan-500/10">Personal Hub 工具箱</textarea>
+    </label>
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">输出</span>
+      <textarea id="base64-output" class="min-h-56 w-full rounded-2xl border border-slate-200 bg-slate-950 p-4 font-mono text-sm text-cyan-100 outline-none dark:border-slate-700" readonly></textarea>
+    </label>
+  </div>
+
+  <div class="mt-4 flex flex-wrap gap-3">
+    <button id="base64-encode" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white dark:bg-white dark:text-slate-950" type="button">编码</button>
+    <button id="base64-decode" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-200" type="button">解码</button>
+    <button id="base64-swap" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-200" type="button">结果转输入</button>
+  </div>
+
+  <p id="base64-message" class="mt-4 text-sm text-slate-500 dark:text-slate-400" aria-live="polite"></p>
+</article>
+
+<script is:inline>
+  const initBase64Converter = () => {
+    const root = document.querySelector('#base64');
+    if (!root || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const input = root.querySelector('#base64-input');
+    const output = root.querySelector('#base64-output');
+    const message = root.querySelector('#base64-message');
+
+    const setMessage = (text, isError = false) => {
+      if (!message) return;
+      message.textContent = text;
+      message.classList.toggle('text-rose-600', isError);
+      message.classList.toggle('dark:text-rose-300', isError);
+      message.classList.toggle('text-slate-500', !isError);
+      message.classList.toggle('dark:text-slate-400', !isError);
+    };
+
+    const encodeText = (text) => btoa(String.fromCodePoint(...new TextEncoder().encode(text)));
+    const decodeText = (text) => new TextDecoder().decode(Uint8Array.from(atob(text), (char) => char.charCodeAt(0)));
+
+    root.querySelector('#base64-encode')?.addEventListener('click', () => {
+      if (!input || !output) return;
+      output.value = encodeText(input.value);
+      setMessage('编码完成。');
+    });
+
+    root.querySelector('#base64-decode')?.addEventListener('click', () => {
+      if (!input || !output) return;
+      try {
+        output.value = decodeText(input.value.trim());
+        setMessage('解码完成。');
+      } catch {
+        setMessage('解码失败：请输入合法的 Base64 字符串。', true);
+      }
+    });
+
+    root.querySelector('#base64-swap')?.addEventListener('click', () => {
+      if (!input || !output) return;
+      input.value = output.value;
+      setMessage('已将输出结果放回输入框。');
+    });
+
+    root.querySelector('#base64-encode')?.click();
+  };
+
+  initBase64Converter();
+  document.addEventListener('astro:page-load', initBase64Converter);
+</script>

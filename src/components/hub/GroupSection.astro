@@ -1,0 +1,14 @@
+---
+import ItemGrid from './ItemGrid.astro';
+import type { HubGroup } from '~/data/hub';
+
+const { group } = Astro.props as { group: HubGroup };
+---
+
+<section class="space-y-5">
+  <div>
+    <h2 class="text-2xl font-bold tracking-tight text-slate-950 dark:text-white">{group.title}</h2>
+    <p class="mt-2 text-slate-600 dark:text-slate-300">{group.description}</p>
+  </div>
+  <ItemGrid items={group.items} />
+</section>

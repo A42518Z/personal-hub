@@ -1,0 +1,124 @@
+---
+import GlowCard from '~/components/effects/GlowCard.astro';
+import type { HubGroup } from '~/data/hub';
+
+const { groups } = Astro.props as { groups: HubGroup[] };
+const categories = ['全部', ...groups.map((group) => group.title)];
+---
+
+<section class="bookmark-explorer space-y-8">
+  <div class="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+    <div class="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+      <label class="block">
+        <span class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">搜索书签</span>
+        <input
+          class="bookmark-search w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:bg-white focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-cyan-500 dark:focus:bg-slate-900 dark:focus:ring-cyan-500/10"
+          type="search"
+          placeholder="搜索名称、描述或标签..."
+        />
+      </label>
+
+      <div>
+        <span class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">分类</span>
+        <div class="flex flex-wrap gap-2">
+          {
+            categories.map((category, index) => (
+              <button
+                class:list={[
+                  'bookmark-filter rounded-full border px-4 py-2 text-sm font-medium transition',
+                  index === 0
+                    ? 'is-active border-slate-950 bg-slate-950 text-white dark:border-white dark:bg-white dark:text-slate-950'
+                    : 'border-slate-200 bg-white text-slate-600 hover:border-cyan-300 hover:text-cyan-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-cyan-500 dark:hover:text-cyan-300',
+                ]}
+                type="button"
+                data-category={category}
+              >
+                {category}
+              </button>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="bookmark-empty hidden rounded-3xl border border-dashed border-slate-300 p-8 text-center text-slate-500 dark:border-slate-700 dark:text-slate-400">
+    没有找到匹配的书签。
+  </p>
+
+  {
+    groups.map((group) => (
+      <section class="bookmark-group space-y-5" data-category={group.title}>
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-slate-950 dark:text-white">{group.title}</h2>
+          <p class="mt-2 text-slate-600 dark:text-slate-300">{group.description}</p>
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            group.items.map((item) => (
+              <article
+                class="bookmark-item"
+                data-category={group.title}
+                data-search={`${item.title} ${item.description} ${item.badge ?? ''}`.toLowerCase()}
+              >
+                <GlowCard item={item} />
+              </article>
+            ))
+          }
+        </div>
+      </section>
+    ))
+  }
+</section>
+
+<script>
+  const explorer = document.querySelector('.bookmark-explorer');
+  const searchInput = explorer?.querySelector<HTMLInputElement>('.bookmark-search');
+  const filters = Array.from(explorer?.querySelectorAll<HTMLButtonElement>('.bookmark-filter') ?? []);
+  const groups = Array.from(explorer?.querySelectorAll<HTMLElement>('.bookmark-group') ?? []);
+  const items = Array.from(explorer?.querySelectorAll<HTMLElement>('.bookmark-item') ?? []);
+  const empty = explorer?.querySelector<HTMLElement>('.bookmark-empty');
+
+  let activeCategory = '全部';
+
+  const updateActiveFilter = () => {
+    filters.forEach((button) => {
+      const isActive = button.dataset.category === activeCategory;
+      button.classList.toggle('is-active', isActive);
+      button.classList.toggle('border-slate-950', isActive);
+      button.classList.toggle('bg-slate-950', isActive);
+      button.classList.toggle('text-white', isActive);
+    });
+  };
+
+  const applyFilters = () => {
+    const query = searchInput?.value.trim().toLowerCase() ?? '';
+    let visibleCount = 0;
+
+    items.forEach((item) => {
+      const matchesCategory = activeCategory === '全部' || item.dataset.category === activeCategory;
+      const matchesQuery = !query || (item.dataset.search ?? '').includes(query);
+      const isVisible = matchesCategory && matchesQuery;
+
+      item.classList.toggle('hidden', !isVisible);
+      if (isVisible) visibleCount += 1;
+    });
+
+    groups.forEach((group) => {
+      const visibleItems = group.querySelectorAll('.bookmark-item:not(.hidden)').length;
+      group.classList.toggle('hidden', visibleItems === 0);
+    });
+
+    empty?.classList.toggle('hidden', visibleCount > 0);
+  };
+
+  filters.forEach((button) => {
+    button.addEventListener('click', () => {
+      activeCategory = button.dataset.category ?? '全部';
+      updateActiveFilter();
+      applyFilters();
+    });
+  });
+
+  searchInput?.addEventListener('input', applyFilters);
+</script>

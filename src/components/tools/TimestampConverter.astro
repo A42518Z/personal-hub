@@ -1,0 +1,87 @@
+---
+---
+
+<article id="timestamp" class="scroll-mt-28 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+  <div class="flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h3 class="text-xl font-bold text-slate-950 dark:text-white">时间戳转换</h3>
+      <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">Unix 时间戳、毫秒时间戳和本地时间互转。</p>
+    </div>
+    <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">ready</span>
+  </div>
+
+  <div class="mt-5 grid gap-4 lg:grid-cols-2">
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">时间戳</span>
+      <input id="timestamp-input" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 font-mono text-sm text-slate-900 outline-none focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:ring-cyan-500/10" placeholder="秒或毫秒时间戳" />
+    </label>
+    <label class="block">
+      <span class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">本地时间</span>
+      <input id="datetime-input" class="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 font-mono text-sm text-slate-900 outline-none focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:ring-cyan-500/10" type="datetime-local" />
+    </label>
+  </div>
+
+  <div class="mt-4 flex flex-wrap gap-3">
+    <button id="timestamp-now" class="rounded-full bg-slate-950 px-4 py-2 text-sm font-semibold text-white dark:bg-white dark:text-slate-950" type="button">当前时间</button>
+    <button id="timestamp-to-date" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-200" type="button">时间戳 → 时间</button>
+    <button id="date-to-timestamp" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 dark:border-slate-700 dark:text-slate-200" type="button">时间 → 时间戳</button>
+  </div>
+
+  <dl class="mt-5 grid gap-3 rounded-2xl bg-slate-50 p-4 text-sm dark:bg-slate-950">
+    <div class="flex flex-wrap justify-between gap-2"><dt class="text-slate-500 dark:text-slate-400">秒</dt><dd id="timestamp-seconds" class="font-mono text-slate-900 dark:text-slate-100"></dd></div>
+    <div class="flex flex-wrap justify-between gap-2"><dt class="text-slate-500 dark:text-slate-400">毫秒</dt><dd id="timestamp-ms" class="font-mono text-slate-900 dark:text-slate-100"></dd></div>
+    <div class="flex flex-wrap justify-between gap-2"><dt class="text-slate-500 dark:text-slate-400">本地时间</dt><dd id="timestamp-local" class="font-mono text-slate-900 dark:text-slate-100"></dd></div>
+    <div class="flex flex-wrap justify-between gap-2"><dt class="text-slate-500 dark:text-slate-400">UTC</dt><dd id="timestamp-utc" class="font-mono text-slate-900 dark:text-slate-100"></dd></div>
+  </dl>
+
+  <p id="timestamp-message" class="mt-4 text-sm text-slate-500 dark:text-slate-400" aria-live="polite"></p>
+</article>
+
+<script is:inline>
+  const initTimestampConverter = () => {
+    const root = document.querySelector('#timestamp');
+    if (!root || root.dataset.bound === 'true') return;
+    root.dataset.bound = 'true';
+
+    const stampInput = root.querySelector('#timestamp-input');
+    const dateInput = root.querySelector('#datetime-input');
+    const secondsOutput = root.querySelector('#timestamp-seconds');
+    const msOutput = root.querySelector('#timestamp-ms');
+    const localOutput = root.querySelector('#timestamp-local');
+    const utcOutput = root.querySelector('#timestamp-utc');
+    const message = root.querySelector('#timestamp-message');
+
+    const toLocalInputValue = (date) => {
+      const offset = date.getTimezoneOffset() * 60000;
+      return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+    };
+
+    const render = (date) => {
+      if (Number.isNaN(date.getTime())) {
+        if (message) message.textContent = '无法解析时间。';
+        return;
+      }
+      const ms = date.getTime();
+      if (secondsOutput) secondsOutput.textContent = String(Math.floor(ms / 1000));
+      if (msOutput) msOutput.textContent = String(ms);
+      if (localOutput) localOutput.textContent = date.toLocaleString();
+      if (utcOutput) utcOutput.textContent = date.toISOString();
+      if (stampInput) stampInput.value = String(Math.floor(ms / 1000));
+      if (dateInput) dateInput.value = toLocalInputValue(date);
+      if (message) message.textContent = '转换完成。';
+    };
+
+    root.querySelector('#timestamp-now')?.addEventListener('click', () => render(new Date()));
+    root.querySelector('#timestamp-to-date')?.addEventListener('click', () => {
+      const value = stampInput?.value.trim() ?? '';
+      const numberValue = Number(value);
+      render(new Date(value.length >= 13 ? numberValue : numberValue * 1000));
+    });
+    root.querySelector('#date-to-timestamp')?.addEventListener('click', () => render(new Date(dateInput?.value ?? '')));
+
+    render(new Date());
+  };
+
+  initTimestampConverter();
+  document.addEventListener('astro:page-load', initTimestampConverter);
+</script>

@@ -1,0 +1,185 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HubHero from '~/components/hub/HubHero.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import { games, gameTags } from '~/data/games';
+
+const metadata = {
+  title: '童年游戏',
+  description: '在浏览器里运行本地 NES ROM，重温红白机时代的像素游戏体验。',
+};
+
+const pageSize = 12;
+const gamesJson = JSON.stringify(games);
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <HubHero
+        eyebrow="Childhood Games"
+        title="把红白机游戏机搬进浏览器。"
+        description={`已内置 ${games.length} 款童年经典 NES 游戏，也保留本地 ROM 上传入口。游戏文件只在进入详情页并点击加载后才会下载。`}
+      />
+    </Reveal>
+
+    <Reveal delay={80}>
+      <section class="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+        <a href="/games/local-rom" data-astro-reload class="group overflow-hidden rounded-[2rem] border border-cyan-200 bg-cyan-50 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-100/60 dark:border-cyan-500/20 dark:bg-cyan-500/10 dark:hover:shadow-none">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-700 dark:text-cyan-300">Local ROM</p>
+          <h2 class="mt-3 text-2xl font-bold text-slate-950 dark:text-white">上传自己的 ROM</h2>
+          <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">选择你拥有合法使用权的 .nes 文件，直接在浏览器本地运行。</p>
+          <span class="mt-5 inline-flex text-sm font-semibold text-cyan-700 transition group-hover:translate-x-1 dark:text-cyan-300">进入本地播放器 →</span>
+        </a>
+
+        <div class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-600 dark:text-cyan-300">Library</p>
+          <h2 class="mt-3 text-2xl font-bold text-slate-950 dark:text-white">内置游戏库</h2>
+          <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">列表页只渲染当前页卡片，不加载 ROM，也不请求缺失封面。进入详情页后手动点击加载游戏。</p>
+        </div>
+      </section>
+    </Reveal>
+
+    <Reveal delay={120}>
+      <section class="space-y-6" data-games-library data-page-size={pageSize}>
+        <script type="application/json" data-games-json set:html={gamesJson}></script>
+
+        <div class="grid gap-4 rounded-[2rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:grid-cols-[minmax(0,1fr)_240px]">
+          <label class="space-y-2">
+            <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">搜索游戏</span>
+            <input data-game-search type="search" placeholder="输入名称、描述或标签" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-cyan-500/10" />
+          </label>
+          <label class="space-y-2">
+            <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">分类</span>
+            <select data-game-tag class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-cyan-500/10">
+              <option value="">全部分类</option>
+              {gameTags.map((tag) => <option value={tag}>{tag}</option>)}
+            </select>
+          </label>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <p class="text-sm text-slate-600 dark:text-slate-300"><span data-game-count>{games.length}</span> 款游戏</p>
+          <div class="flex items-center gap-2">
+            <button data-game-prev type="button" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-800 dark:text-slate-200 dark:hover:border-cyan-500 dark:hover:text-cyan-300">上一页</button>
+            <span data-game-page class="text-sm font-semibold text-slate-700 dark:text-slate-200">1 / 1</span>
+            <button data-game-next type="button" class="rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700 disabled:cursor-not-allowed disabled:opacity-40 dark:border-slate-800 dark:text-slate-200 dark:hover:border-cyan-500 dark:hover:text-cyan-300">下一页</button>
+          </div>
+        </div>
+
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-game-grid></div>
+
+        <p data-game-empty class="hidden rounded-3xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">没有找到匹配的游戏。</p>
+      </section>
+    </Reveal>
+  </div>
+</Layout>
+
+<script>
+  type GameItem = {
+    title: string;
+    slug: string;
+    description: string;
+    tags: string[];
+    sourceIndex: string;
+    sizeLabel: string;
+    compatibility: 'verified';
+  };
+
+  const root = document.querySelector<HTMLElement>('[data-games-library]');
+  const searchInput = document.querySelector<HTMLInputElement>('[data-game-search]');
+  const tagSelect = document.querySelector<HTMLSelectElement>('[data-game-tag]');
+  const grid = document.querySelector<HTMLElement>('[data-game-grid]');
+  const countLabel = document.querySelector<HTMLElement>('[data-game-count]');
+  const pageLabel = document.querySelector<HTMLElement>('[data-game-page]');
+  const prevButton = document.querySelector<HTMLButtonElement>('[data-game-prev]');
+  const nextButton = document.querySelector<HTMLButtonElement>('[data-game-next]');
+  const emptyState = document.querySelector<HTMLElement>('[data-game-empty]');
+  const dataScript = document.querySelector<HTMLScriptElement>('[data-games-json]');
+  const allGames: GameItem[] = dataScript?.textContent ? JSON.parse(dataScript.textContent) : [];
+  const pageSize = Number(root?.dataset.pageSize || 12);
+  let currentPage = 1;
+
+  function normalize(value: string) {
+    return value.trim().toLowerCase();
+  }
+
+  function escapeHtml(value: string) {
+    return value
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  function getFilteredGames() {
+    const keyword = normalize(searchInput?.value || '');
+    const tag = tagSelect?.value || '';
+    return allGames.filter((game) => {
+      const haystack = normalize(`${game.title} ${game.description} ${game.tags.join('|')}`);
+      return (!keyword || haystack.includes(keyword)) && (!tag || game.tags.includes(tag));
+    });
+  }
+
+  function renderCard(game: GameItem) {
+    const tags = game.tags.map((tag) => `<span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600 dark:bg-slate-800 dark:text-slate-300">${escapeHtml(tag)}</span>`).join('');
+    return `
+      <article class="group overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:border-cyan-300 hover:shadow-xl hover:shadow-cyan-100/60 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-cyan-500/60 dark:hover:shadow-none">
+        <a href="/games/${encodeURIComponent(game.slug)}" data-astro-reload class="block">
+          <div class="relative h-44 overflow-hidden bg-slate-950">
+            <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(34,211,238,0.45),transparent_28%),radial-gradient(circle_at_70%_60%,rgba(244,63,94,0.35),transparent_32%)]">
+              <div class="absolute inset-x-5 bottom-5 grid grid-cols-8 gap-1.5">
+                ${Array.from({ length: 24 }, (_, index) => `<span class="h-3 rounded-sm ${index % 3 === 0 ? 'bg-cyan-300' : index % 3 === 1 ? 'bg-rose-300' : 'bg-white/30'}"></span>`).join('')}
+              </div>
+            </div>
+            <span class="absolute left-4 top-4 rounded-full bg-black/45 px-3 py-1 text-xs font-semibold text-cyan-100 backdrop-blur">${escapeHtml(game.sourceIndex)}</span>
+            <span class="absolute right-4 top-4 rounded-full bg-emerald-400/90 px-3 py-1 text-xs font-bold text-emerald-950">已验证</span>
+          </div>
+          <div class="p-6">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="text-lg font-bold text-slate-950 dark:text-white">${escapeHtml(game.title)}</h3>
+              <span class="rounded-full bg-cyan-50 px-3 py-1 text-xs font-medium text-cyan-700 dark:bg-cyan-500/10 dark:text-cyan-300">${escapeHtml(game.sizeLabel)}</span>
+            </div>
+            <p class="mt-3 line-clamp-2 text-sm leading-6 text-slate-600 dark:text-slate-300">${escapeHtml(game.description)}</p>
+            <div class="mt-4 flex flex-wrap gap-2">${tags}</div>
+            <span class="mt-5 inline-flex text-sm font-semibold text-cyan-700 transition group-hover:translate-x-1 dark:text-cyan-300">进入详情 →</span>
+          </div>
+        </a>
+      </article>
+    `;
+  }
+
+  function render() {
+    const filtered = getFilteredGames();
+    const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+    currentPage = Math.min(Math.max(1, currentPage), totalPages);
+    const start = (currentPage - 1) * pageSize;
+    const pageItems = filtered.slice(start, start + pageSize);
+    if (grid) grid.innerHTML = pageItems.map(renderCard).join('');
+    if (countLabel) countLabel.textContent = String(filtered.length);
+    if (pageLabel) pageLabel.textContent = `${currentPage} / ${totalPages}`;
+    if (prevButton) prevButton.disabled = currentPage <= 1;
+    if (nextButton) nextButton.disabled = currentPage >= totalPages;
+    emptyState?.classList.toggle('hidden', filtered.length > 0);
+  }
+
+  searchInput?.addEventListener('input', () => {
+    currentPage = 1;
+    render();
+  });
+  tagSelect?.addEventListener('change', () => {
+    currentPage = 1;
+    render();
+  });
+  prevButton?.addEventListener('click', () => {
+    currentPage -= 1;
+    render();
+  });
+  nextButton?.addEventListener('click', () => {
+    currentPage += 1;
+    render();
+  });
+
+  render();
+</script>

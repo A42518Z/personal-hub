@@ -1,0 +1,43 @@
+---
+const { items = [], label = 'Tech stack' } = Astro.props as { items: string[]; label?: string };
+const duplicatedItems = [...items, ...items];
+---
+
+<section class="overflow-hidden rounded-3xl border border-slate-200 bg-white py-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+  <div class="mb-4 px-6 text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">{label}</div>
+  <div class="marquee-mask flex overflow-hidden">
+    <div class="marquee-track flex min-w-full shrink-0 items-center gap-3 px-3">
+      {duplicatedItems.map((item) => <span class="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-medium text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200">{item}</span>)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .marquee-mask {
+    mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  }
+
+  .marquee-track {
+    animation: marquee-scroll 28s linear infinite;
+  }
+
+  .marquee-mask:hover .marquee-track {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+      flex-wrap: wrap;
+    }
+  }
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+</style>

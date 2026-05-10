@@ -1,0 +1,10 @@
+---
+import ItemCard from './ItemCard.astro';
+import type { HubItem } from '~/data/hub';
+
+const { items } = Astro.props as { items: HubItem[] };
+---
+
+<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  {items.map((item) => <ItemCard item={item} />)}
+</div>

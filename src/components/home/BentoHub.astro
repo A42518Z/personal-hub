@@ -1,0 +1,14 @@
+---
+import GlowCard from '~/components/effects/GlowCard.astro';
+import type { HubItem } from '~/data/hub';
+
+const { items } = Astro.props as { items: HubItem[] };
+const [primary, secondary, third, ...rest] = items;
+---
+
+<section class="grid gap-5 lg:grid-cols-6">
+  {primary && <GlowCard item={primary} class="lg:col-span-3 lg:row-span-2 lg:min-h-72" />}
+  {secondary && <GlowCard item={secondary} class="lg:col-span-3" />}
+  {third && <GlowCard item={third} class="lg:col-span-3" />}
+  {rest.map((item) => <GlowCard item={item} class="lg:col-span-2" />)}
+</section>

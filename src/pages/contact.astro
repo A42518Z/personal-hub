@@ -1,0 +1,61 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HubHero from '~/components/hub/HubHero.astro';
+import GlowCard from '~/components/effects/GlowCard.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import { contactIntro, contactLinks, feedbackTopics } from '~/data/contact';
+
+const metadata = {
+  title: '联系',
+  description: contactIntro.description,
+};
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-7xl space-y-14 px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <HubHero eyebrow="Contact" title={contactIntro.title} description={contactIntro.description} />
+    </Reveal>
+
+    <Reveal delay={80}>
+      <section class="space-y-5">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-600 dark:text-cyan-300">Links</p>
+          <h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-950 dark:text-white">常用入口</h2>
+          <p class="mt-3 text-slate-600 dark:text-slate-300">当前先使用静态入口，后续可以接入 GitHub Issues、表单服务或自建反馈 API。</p>
+        </div>
+        <div class="grid gap-5 md:grid-cols-2">
+          {contactLinks.map((item) => <GlowCard item={item} />)}
+        </div>
+      </section>
+    </Reveal>
+
+    <Reveal delay={140}>
+      <section class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-8">
+        <div class="mb-6">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-600 dark:text-cyan-300">Feedback</p>
+          <h2 class="mt-3 text-3xl font-bold tracking-tight text-slate-950 dark:text-white">适合反馈的方向</h2>
+        </div>
+        <div class="grid gap-4 md:grid-cols-2">
+          {
+            feedbackTopics.map((item) => (
+              <div class="rounded-3xl bg-slate-50 p-5 dark:bg-slate-800/70">
+                <h3 class="text-base font-semibold text-slate-950 dark:text-white">{item.title}</h3>
+                <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.description}</p>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+    </Reveal>
+
+    <Reveal delay={200}>
+      <section class="rounded-[2rem] border border-cyan-200 bg-cyan-50 p-6 text-slate-900 dark:border-cyan-500/30 dark:bg-cyan-500/10 dark:text-white sm:p-8">
+        <h2 class="text-2xl font-bold tracking-tight">后续可以接入真实反馈系统</h2>
+        <p class="mt-3 max-w-3xl text-sm leading-6 text-slate-700 dark:text-cyan-50">
+          当前页面不提供无效表单，避免用户提交后没有响应。等站点部署稳定后，可以接入 GitHub Issues、Formspree、Resend 邮件服务，或者 Personal Hub 自己的 API。
+        </p>
+      </section>
+    </Reveal>
+  </div>
+</Layout>

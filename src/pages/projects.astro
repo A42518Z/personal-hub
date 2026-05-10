@@ -1,0 +1,33 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HubHero from '~/components/hub/HubHero.astro';
+import ItemGrid from '~/components/hub/ItemGrid.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import ProjectShowcase from '~/components/project/ProjectShowcase.astro';
+import { projects } from '~/data/hub';
+
+const metadata = {
+  title: '项目',
+  description: 'Personal Hub 的项目入口、截图占位、状态和复盘规划。',
+};
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <HubHero
+        eyebrow="Projects"
+        title="项目入口、截图、复盘和亮点沉淀。"
+        description="这里会逐步收集个人项目、服务入口、前端实验和开发过程中的复盘记录。"
+      />
+    </Reveal>
+
+    <Reveal delay={80}>
+      <ItemGrid items={projects} />
+    </Reveal>
+
+    <Reveal delay={140}>
+      <ProjectShowcase />
+    </Reveal>
+  </div>
+</Layout>

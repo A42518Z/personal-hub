@@ -1,0 +1,70 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HubHero from '~/components/hub/HubHero.astro';
+import ItemGrid from '~/components/hub/ItemGrid.astro';
+import BentoHub from '~/components/home/BentoHub.astro';
+import MagneticLink from '~/components/effects/MagneticLink.astro';
+import Marquee from '~/components/effects/Marquee.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import { projects, quickLinks, services } from '~/data/hub';
+
+const metadata = {
+  title: 'Personal Hub — 博客、导航、项目与工具箱',
+  ignoreTitleTemplate: true,
+};
+
+const stackItems = ['Astro', 'Tailwind CSS', 'MDX', 'Motion', 'Three.js', 'Canvas', 'WebGL', 'Pagefind', 'Local API', 'Docker'];
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-7xl space-y-14 px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <HubHero
+        eyebrow="Personal Hub"
+        title="把博客、导航、项目、工具和实验室收进一个地方。"
+        description="这是一个基于 AstroWind 改造的个人集网站底座，后续页面会保持薄页面、细组件、数据独立和 skill 同步。"
+      />
+    </Reveal>
+
+    <Reveal delay={80}>
+      <div class="flex flex-wrap items-center gap-4">
+        <MagneticLink href="/projects" text="查看项目" />
+        <a href="/lab" class="text-sm font-semibold text-slate-700 underline decoration-slate-300 underline-offset-4 transition hover:text-cyan-600 dark:text-slate-200 dark:decoration-slate-600">进入实验室</a>
+      </div>
+    </Reveal>
+
+    <Reveal delay={120}>
+      <Marquee label="Building blocks" items={stackItems} />
+    </Reveal>
+
+    <Reveal delay={160}>
+      <section class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-slate-950 dark:text-white">快速入口</h2>
+          <p class="mt-2 text-slate-600 dark:text-slate-300">用 Bento 布局把核心模块做成更醒目的个人集入口。</p>
+        </div>
+        <BentoHub items={quickLinks} />
+      </section>
+    </Reveal>
+
+    <Reveal delay={200}>
+      <section class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-slate-950 dark:text-white">精选项目</h2>
+          <p class="mt-2 text-slate-600 dark:text-slate-300">沉淀项目入口、亮点、截图和复盘。</p>
+        </div>
+        <ItemGrid items={projects} />
+      </section>
+    </Reveal>
+
+    <Reveal delay={240}>
+      <section class="space-y-5">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight text-slate-950 dark:text-white">服务状态</h2>
+          <p class="mt-2 text-slate-600 dark:text-slate-300">第一版先用静态状态，后续接入 API 健康检查和 Docker 状态。</p>
+        </div>
+        <ItemGrid items={services} />
+      </section>
+    </Reveal>
+  </div>
+</Layout>

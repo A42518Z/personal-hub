@@ -1,0 +1,33 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HubHero from '~/components/hub/HubHero.astro';
+import ItemGrid from '~/components/hub/ItemGrid.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import StatusDetails from '~/components/status/StatusDetails.astro';
+import { services } from '~/data/hub';
+
+const metadata = {
+  title: '状态页',
+  description: 'Personal Hub 的服务状态、Docker 状态和 API 健康检查规划。',
+};
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <HubHero
+        eyebrow="Status"
+        title="服务状态、Docker 状态和 API 健康检查。"
+        description="第一版使用静态状态卡片，后续可以接入本地健康检查接口、Docker 状态接口和构建部署状态。"
+      />
+    </Reveal>
+
+    <Reveal delay={80}>
+      <ItemGrid items={services} />
+    </Reveal>
+
+    <Reveal delay={140}>
+      <StatusDetails />
+    </Reveal>
+  </div>
+</Layout>

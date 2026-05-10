@@ -1,0 +1,33 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HubHero from '~/components/hub/HubHero.astro';
+import ItemGrid from '~/components/hub/ItemGrid.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import LabPreviewGrid from '~/components/lab/LabPreviewGrid.astro';
+import { labs } from '~/data/hub';
+
+const metadata = {
+  title: '实验室',
+  description: 'Personal Hub 的前端动效、Canvas、WebGL 和 3D 实验场。',
+};
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <HubHero
+        eyebrow="Frontend Lab"
+        title="前端动效、交互和视觉实验场。"
+        description="用于存放粒子背景、玻璃拟态、鼠标跟随光效、3D 卡片和 Canvas 动效等实验。"
+      />
+    </Reveal>
+
+    <Reveal delay={80}>
+      <ItemGrid items={labs} />
+    </Reveal>
+
+    <Reveal delay={140}>
+      <LabPreviewGrid />
+    </Reveal>
+  </div>
+</Layout>
