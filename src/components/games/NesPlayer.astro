@@ -25,12 +25,16 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
         <input data-nes-file class="sr-only" type="file" accept=".nes,application/octet-stream" />
       </label>
 
-      <div class="relative mx-auto aspect-[256/240] w-full max-w-[768px] overflow-hidden rounded-3xl border border-white/10 bg-black">
+      <div data-nes-screen class="relative mx-auto aspect-[256/240] w-full max-w-[768px] overflow-hidden rounded-3xl border border-white/10 bg-black">
         <canvas data-nes-canvas class="h-full w-full image-render-pixelated"></canvas>
         <div data-nes-overlay class="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-slate-950/85 px-6 text-center backdrop-blur-sm">
           <span data-nes-overlay-title class="rounded-full bg-cyan-400 px-5 py-2 text-sm font-bold text-slate-950">{romUrl ? '点击下方按钮加载游戏' : '上传 ROM 后开始'}</span>
           <span data-nes-message class="max-w-md text-sm leading-6 text-slate-300">{romUrl ? '进入页面不会自动下载 ROM；点击“加载游戏”后才开始下载。' : '先上传合法 ROM，再点击开始运行。'}</span>
         </div>
+
+        <button data-nes-fullscreen type="button" class="absolute right-3 top-3 z-30 rounded-full border border-white/20 bg-slate-950/35 px-3 py-1.5 text-xs font-bold text-white shadow-xl backdrop-blur-sm transition active:bg-cyan-300/50 lg:hidden">
+          全屏
+        </button>
 
         <div data-nes-touch-controls class="pointer-events-none absolute inset-x-3 bottom-3 z-20 flex items-end justify-between gap-2 opacity-0 transition-opacity duration-200 lg:hidden">
           <div data-nes-joystick class="relative h-24 w-24 shrink-0 rounded-full border border-white/20 bg-slate-950/25 shadow-2xl backdrop-blur-sm touch-none select-none" role="application" aria-label="虚拟摇杆">
@@ -72,7 +76,7 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
     <div>
       <p class="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-600 dark:text-cyan-300">Controls</p>
       <h3 class="mt-3 text-2xl font-bold text-slate-950 dark:text-white">键位说明</h3>
-      <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">加载完成后点击开始，电脑端使用键盘操作，手机端使用画面内的半透明虚拟摇杆和按钮。</p>
+      <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">加载完成后点击开始，电脑端使用键盘操作，手机端可点击画面右上角全屏，并使用画面内的半透明虚拟摇杆和按钮。</p>
     </div>
 
     <div class="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
@@ -98,12 +102,14 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
   type PlayerState = 'idle' | 'downloading' | 'initializing' | 'ready' | 'running' | 'paused' | 'error';
 
   const root = document.querySelector<HTMLElement>('[data-nes-root]');
+  const screenElement = document.querySelector<HTMLElement>('[data-nes-screen]');
   const canvas = document.querySelector<HTMLCanvasElement>('[data-nes-canvas]');
   const fileInput = document.querySelector<HTMLInputElement>('[data-nes-file]');
   const overlay = document.querySelector<HTMLElement>('[data-nes-overlay]');
   const overlayTitle = document.querySelector<HTMLElement>('[data-nes-overlay-title]');
   const primaryButton = document.querySelector<HTMLButtonElement>('[data-nes-primary]');
   const resetButton = document.querySelector<HTMLButtonElement>('[data-nes-reset]');
+  const fullscreenButton = document.querySelector<HTMLButtonElement>('[data-nes-fullscreen]');
   const statusLabel = document.querySelector<HTMLElement>('[data-nes-status]');
   const message = document.querySelector<HTMLElement>('[data-nes-message]');
   const stageLabel = document.querySelector<HTMLElement>('[data-nes-stage]');
@@ -190,10 +196,61 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
     if (joystickKnob) joystickKnob.style.transform = 'translate(-50%, -50%) translate(0px, 0px)';
   }
 
+  function isScreenFullscreen() {
+    return Boolean(screenElement && document.fullscreenElement === screenElement);
+  }
+
   function setTouchControlsEnabled(enabled: boolean) {
     if (!touchControls) return;
     touchControls.classList.toggle('opacity-0', !enabled);
     touchControls.classList.toggle('pointer-events-none', !enabled);
+  }
+
+  function updateFullscreenButton() {
+    if (!fullscreenButton) return;
+    fullscreenButton.textContent = isScreenFullscreen() ? '退出全屏' : '全屏';
+  }
+
+  async function lockLandscape() {
+    try {
+      const orientation = screen.orientation as ScreenOrientation & { lock?: (orientation: OrientationLockType) => Promise<void> };
+      await orientation.lock?.('landscape');
+    } catch {
+      setText(message, '已进入全屏。当前浏览器不支持自动锁定横屏时，请手动旋转手机。');
+    }
+  }
+
+  function unlockOrientation() {
+    try {
+      screen.orientation?.unlock?.();
+    } catch {}
+  }
+
+  async function toggleFullscreen() {
+    if (!screenElement) return;
+    try {
+      if (isScreenFullscreen()) {
+        await document.exitFullscreen?.();
+        return;
+      }
+      await screenElement.requestFullscreen();
+      await lockLandscape();
+      setText(message, '已进入全屏横屏模式，使用画面内摇杆和按钮操作。');
+    } catch {
+      setText(message, '当前浏览器不支持自动全屏或横屏。可以手动旋转手机后继续游玩。');
+    } finally {
+      updateFullscreenButton();
+    }
+  }
+
+  function handleFullscreenChange() {
+    const isFullscreen = isScreenFullscreen();
+    screenElement?.classList.toggle('nes-fullscreen-active', isFullscreen);
+    updateFullscreenButton();
+    if (!isFullscreen) {
+      unlockOrientation();
+      releaseAllTouchButtons();
+    }
   }
 
   function setState(next: PlayerState, detail = '') {
@@ -492,12 +549,15 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
   initCanvas();
   setState('idle', builtInRomUrl ? '等待加载' : '等待上传');
   setProgress(0);
+  updateFullscreenButton();
   fileInput?.addEventListener('change', (event) => {
     const target = event.target;
     loadFile(target instanceof HTMLInputElement ? target.files?.[0] : undefined);
   });
   primaryButton?.addEventListener('click', handlePrimary);
   resetButton?.addEventListener('click', reset);
+  fullscreenButton?.addEventListener('click', toggleFullscreen);
+  document.addEventListener('fullscreenchange', handleFullscreenChange);
   window.addEventListener('keydown', handleKeyDown);
   window.addEventListener('keyup', handleKeyUp);
   if (joystick) {
@@ -532,9 +592,12 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
   document.addEventListener('astro:before-swap', () => {
     stopLoop('idle');
     releaseAllTouchButtons();
+    unlockOrientation();
     scriptProcessor?.disconnect();
     audioContext?.close();
     touchCleanupHandlers.forEach((cleanup) => cleanup());
+    fullscreenButton?.removeEventListener('click', toggleFullscreen);
+    document.removeEventListener('fullscreenchange', handleFullscreenChange);
     window.removeEventListener('keydown', handleKeyDown);
     window.removeEventListener('keyup', handleKeyUp);
   });
@@ -542,4 +605,26 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
 
 <style>
   .image-render-pixelated { image-rendering: pixelated; }
+
+  [data-nes-screen]:fullscreen {
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    border-radius: 0;
+    border: 0;
+    background: #000;
+  }
+
+  [data-nes-screen]:fullscreen [data-nes-canvas] {
+    width: 100vw;
+    height: 100vh;
+    object-fit: fill;
+  }
+
+  [data-nes-screen]:fullscreen [data-nes-touch-controls] {
+    inset-left: auto;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    left: max(1rem, env(safe-area-inset-left));
+    right: max(1rem, env(safe-area-inset-right));
+  }
 </style>
