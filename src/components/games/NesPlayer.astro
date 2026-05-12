@@ -31,6 +31,24 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
           <span data-nes-overlay-title class="rounded-full bg-cyan-400 px-5 py-2 text-sm font-bold text-slate-950">{romUrl ? '点击下方按钮加载游戏' : '上传 ROM 后开始'}</span>
           <span data-nes-message class="max-w-md text-sm leading-6 text-slate-300">{romUrl ? '进入页面不会自动下载 ROM；点击“加载游戏”后才开始下载。' : '先上传合法 ROM，再点击开始运行。'}</span>
         </div>
+
+        <div data-nes-touch-controls class="pointer-events-none absolute inset-x-3 bottom-3 z-20 flex items-end justify-between gap-2 opacity-0 transition-opacity duration-200 lg:hidden">
+          <div data-nes-joystick class="relative h-24 w-24 shrink-0 rounded-full border border-white/20 bg-slate-950/25 shadow-2xl backdrop-blur-sm touch-none select-none" role="application" aria-label="虚拟摇杆">
+            <div class="absolute left-1/2 top-1/2 h-14 w-14 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/15 bg-white/5"></div>
+            <div data-nes-joystick-knob class="absolute left-1/2 top-1/2 h-10 w-10 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/35 bg-white/25 shadow-lg transition-transform duration-75"></div>
+          </div>
+
+          <div class="flex flex-col items-center gap-1.5 text-white">
+            <div class="flex gap-1.5 rounded-full border border-white/15 bg-slate-950/25 p-1.5 shadow-2xl backdrop-blur-sm">
+              <button data-nes-touch-button data-nes-button="b" type="button" aria-label="B" class="h-10 w-10 rounded-full border border-white/30 bg-white/15 text-sm font-bold active:bg-cyan-300/60">B</button>
+              <button data-nes-touch-button data-nes-button="a" type="button" aria-label="A" class="h-10 w-10 rounded-full border border-white/30 bg-white/15 text-sm font-bold active:bg-cyan-300/60">A</button>
+            </div>
+            <div class="flex gap-1.5 rounded-full border border-white/15 bg-slate-950/25 p-1 shadow-2xl backdrop-blur-sm">
+              <button data-nes-touch-button data-nes-button="select" type="button" aria-label="Select" class="h-7 rounded-full border border-white/30 bg-white/15 px-2 text-[10px] font-bold uppercase active:bg-cyan-300/60">Select</button>
+              <button data-nes-touch-button data-nes-button="start" type="button" aria-label="Start" class="h-7 rounded-full border border-white/30 bg-white/15 px-2 text-[10px] font-bold uppercase active:bg-cyan-300/60">Start</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="space-y-3 rounded-3xl border border-white/10 bg-white/5 p-4">
@@ -54,7 +72,7 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
     <div>
       <p class="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-600 dark:text-cyan-300">Controls</p>
       <h3 class="mt-3 text-2xl font-bold text-slate-950 dark:text-white">键位说明</h3>
-      <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">加载完成后点击开始，再使用键盘操作。第一版暂不提供移动端虚拟手柄。</p>
+      <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">加载完成后点击开始，电脑端使用键盘操作，手机端使用画面内的半透明虚拟摇杆和按钮。</p>
     </div>
 
     <div class="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
@@ -91,6 +109,10 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
   const stageLabel = document.querySelector<HTMLElement>('[data-nes-stage]');
   const progressText = document.querySelector<HTMLElement>('[data-nes-progress-text]');
   const progressBar = document.querySelector<HTMLElement>('[data-nes-progress]');
+  const touchControls = document.querySelector<HTMLElement>('[data-nes-touch-controls]');
+  const touchButtons = document.querySelectorAll<HTMLButtonElement>('[data-nes-touch-button]');
+  const joystick = document.querySelector<HTMLElement>('[data-nes-joystick]');
+  const joystickKnob = document.querySelector<HTMLElement>('[data-nes-joystick-knob]');
 
   const builtInRomUrl = root?.dataset.romUrl || '';
   const builtInRomTitle = root?.dataset.romTitle || '内置 ROM';
@@ -99,8 +121,13 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
   const frameTime = 1000 / 60.0988;
   const audioBufferSize = 4096;
   const minBufferedSamples = 2048;
+  const joystickMaxDistance = 28;
+  const joystickDeadZone = 10;
   const audioL: number[] = [];
   const audioR: number[] = [];
+  const activeTouchButtons = new Set<ButtonKey>();
+  const activeJoystickButtons = new Set<ButtonKey>();
+  const touchCleanupHandlers: Array<() => void> = [];
 
   let state: PlayerState = 'idle';
   let nes: NES | undefined;
@@ -110,6 +137,7 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
   let scriptProcessor: ScriptProcessorNode | undefined;
   let animationFrame: number | undefined;
   let lastFrameTime = 0;
+  let joystickPointerId: number | undefined;
 
   const keyMap: Record<string, ButtonKey> = {
     w: Controller.BUTTON_UP, W: Controller.BUTTON_UP, ArrowUp: Controller.BUTTON_UP,
@@ -118,6 +146,13 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
     d: Controller.BUTTON_RIGHT, D: Controller.BUTTON_RIGHT, ArrowRight: Controller.BUTTON_RIGHT,
     j: Controller.BUTTON_B, J: Controller.BUTTON_B, k: Controller.BUTTON_A, K: Controller.BUTTON_A,
     1: Controller.BUTTON_START, 2: Controller.BUTTON_SELECT,
+  };
+
+  const touchButtonMap: Record<string, ButtonKey> = {
+    a: Controller.BUTTON_A,
+    b: Controller.BUTTON_B,
+    start: Controller.BUTTON_START,
+    select: Controller.BUTTON_SELECT,
   };
 
   function formatBytes(bytes: number) {
@@ -141,6 +176,26 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
     progressText.textContent = total ? `${Math.round(percent)}% · ${formatBytes(downloaded)} / ${formatBytes(total)}` : `${Math.round(percent)}%`;
   }
 
+  function releaseButtons(buttons: Set<ButtonKey>) {
+    if (nes) {
+      for (const button of buttons) nes.buttonUp(1, button);
+    }
+    buttons.clear();
+  }
+
+  function releaseAllTouchButtons() {
+    releaseButtons(activeTouchButtons);
+    releaseButtons(activeJoystickButtons);
+    joystickPointerId = undefined;
+    if (joystickKnob) joystickKnob.style.transform = 'translate(-50%, -50%) translate(0px, 0px)';
+  }
+
+  function setTouchControlsEnabled(enabled: boolean) {
+    if (!touchControls) return;
+    touchControls.classList.toggle('opacity-0', !enabled);
+    touchControls.classList.toggle('pointer-events-none', !enabled);
+  }
+
   function setState(next: PlayerState, detail = '') {
     state = next;
     const labels: Record<PlayerState, string> = {
@@ -161,6 +216,8 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
     if (resetButton) resetButton.disabled = !(next === 'ready' || next === 'running' || next === 'paused');
     if (overlay) overlay.classList.toggle('hidden', next === 'running');
     if (overlayTitle) overlayTitle.textContent = next === 'ready' ? '准备好了' : next === 'running' ? '运行中' : next === 'paused' ? '已暂停' : next === 'error' ? '加载失败' : builtInRomUrl ? '点击加载游戏' : '上传 ROM 后开始';
+    setTouchControlsEnabled(next === 'running');
+    if (next !== 'running') releaseAllTouchButtons();
   }
 
   function initCanvas() {
@@ -221,6 +278,7 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
   }
 
   function stopLoop(next: PlayerState = 'paused') {
+    releaseAllTouchButtons();
     if (animationFrame) window.cancelAnimationFrame(animationFrame);
     animationFrame = undefined;
     lastFrameTime = 0;
@@ -349,6 +407,88 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
     nes.buttonUp(1, button);
   }
 
+  function syncJoystickButtons(nextButtons: Set<ButtonKey>) {
+    if (!nes || state !== 'running') return;
+    for (const button of activeJoystickButtons) {
+      if (!nextButtons.has(button)) nes.buttonUp(1, button);
+    }
+    for (const button of nextButtons) {
+      if (!activeJoystickButtons.has(button)) nes.buttonDown(1, button);
+    }
+    activeJoystickButtons.clear();
+    for (const button of nextButtons) activeJoystickButtons.add(button);
+  }
+
+  function updateJoystick(clientX: number, clientY: number) {
+    if (!joystick) return;
+    const rect = joystick.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const rawX = clientX - centerX;
+    const rawY = clientY - centerY;
+    const distance = Math.hypot(rawX, rawY);
+    const limitedDistance = Math.min(distance, joystickMaxDistance);
+    const ratio = distance ? limitedDistance / distance : 0;
+    const x = rawX * ratio;
+    const y = rawY * ratio;
+
+    if (joystickKnob) joystickKnob.style.transform = `translate(-50%, -50%) translate(${x}px, ${y}px)`;
+
+    const nextButtons = new Set<ButtonKey>();
+    if (Math.abs(rawX) > joystickDeadZone) nextButtons.add(rawX > 0 ? Controller.BUTTON_RIGHT : Controller.BUTTON_LEFT);
+    if (Math.abs(rawY) > joystickDeadZone) nextButtons.add(rawY > 0 ? Controller.BUTTON_DOWN : Controller.BUTTON_UP);
+    syncJoystickButtons(nextButtons);
+  }
+
+  function resetJoystick() {
+    syncJoystickButtons(new Set<ButtonKey>());
+    joystickPointerId = undefined;
+    if (joystickKnob) joystickKnob.style.transform = 'translate(-50%, -50%) translate(0px, 0px)';
+  }
+
+  function handleJoystickDown(event: PointerEvent) {
+    event.preventDefault();
+    if (!nes || state !== 'running') return;
+    joystickPointerId = event.pointerId;
+    joystick?.setPointerCapture?.(event.pointerId);
+    updateJoystick(event.clientX, event.clientY);
+  }
+
+  function handleJoystickMove(event: PointerEvent) {
+    if (joystickPointerId !== event.pointerId) return;
+    event.preventDefault();
+    updateJoystick(event.clientX, event.clientY);
+  }
+
+  function handleJoystickUp(event: PointerEvent) {
+    if (joystickPointerId !== event.pointerId) return;
+    event.preventDefault();
+    if (joystick?.hasPointerCapture?.(event.pointerId)) joystick.releasePointerCapture(event.pointerId);
+    resetJoystick();
+  }
+
+  function handleTouchButtonDown(event: PointerEvent, button: ButtonKey | undefined) {
+    event.preventDefault();
+    if (button === undefined || !nes || state !== 'running') return;
+    const target = event.currentTarget;
+    if (target instanceof HTMLElement) target.setPointerCapture?.(event.pointerId);
+    nes.buttonDown(1, button);
+    activeTouchButtons.add(button);
+  }
+
+  function handleTouchButtonUp(event: PointerEvent, button: ButtonKey | undefined) {
+    event.preventDefault();
+    if (button === undefined) return;
+    const target = event.currentTarget;
+    if (target instanceof HTMLElement && target.hasPointerCapture?.(event.pointerId)) target.releasePointerCapture(event.pointerId);
+    if (!nes) {
+      activeTouchButtons.delete(button);
+      return;
+    }
+    nes.buttonUp(1, button);
+    activeTouchButtons.delete(button);
+  }
+
   initCanvas();
   setState('idle', builtInRomUrl ? '等待加载' : '等待上传');
   setProgress(0);
@@ -360,10 +500,41 @@ const { title = '本地 ROM 播放器', romUrl = '', description = '文件只会
   resetButton?.addEventListener('click', reset);
   window.addEventListener('keydown', handleKeyDown);
   window.addEventListener('keyup', handleKeyUp);
+  if (joystick) {
+    joystick.addEventListener('pointerdown', handleJoystickDown);
+    joystick.addEventListener('pointermove', handleJoystickMove);
+    joystick.addEventListener('pointerup', handleJoystickUp);
+    joystick.addEventListener('pointercancel', handleJoystickUp);
+    joystick.addEventListener('lostpointercapture', handleJoystickUp);
+    touchCleanupHandlers.push(() => {
+      joystick.removeEventListener('pointerdown', handleJoystickDown);
+      joystick.removeEventListener('pointermove', handleJoystickMove);
+      joystick.removeEventListener('pointerup', handleJoystickUp);
+      joystick.removeEventListener('pointercancel', handleJoystickUp);
+      joystick.removeEventListener('lostpointercapture', handleJoystickUp);
+    });
+  }
+  touchButtons.forEach((buttonElement) => {
+    const button = touchButtonMap[buttonElement.dataset.nesButton || ''];
+    const pointerDown = (event: PointerEvent) => handleTouchButtonDown(event, button);
+    const pointerUp = (event: PointerEvent) => handleTouchButtonUp(event, button);
+    buttonElement.addEventListener('pointerdown', pointerDown);
+    buttonElement.addEventListener('pointerup', pointerUp);
+    buttonElement.addEventListener('pointercancel', pointerUp);
+    buttonElement.addEventListener('lostpointercapture', pointerUp);
+    touchCleanupHandlers.push(() => {
+      buttonElement.removeEventListener('pointerdown', pointerDown);
+      buttonElement.removeEventListener('pointerup', pointerUp);
+      buttonElement.removeEventListener('pointercancel', pointerUp);
+      buttonElement.removeEventListener('lostpointercapture', pointerUp);
+    });
+  });
   document.addEventListener('astro:before-swap', () => {
     stopLoop('idle');
+    releaseAllTouchButtons();
     scriptProcessor?.disconnect();
     audioContext?.close();
+    touchCleanupHandlers.forEach((cleanup) => cleanup());
     window.removeEventListener('keydown', handleKeyDown);
     window.removeEventListener('keyup', handleKeyUp);
   });
