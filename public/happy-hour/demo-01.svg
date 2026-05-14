@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1100" viewBox="0 0 900 1100">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f9a8d4"/><stop offset="1" stop-color="#fef3c7"/></linearGradient>
+  </defs>
+  <rect width="900" height="1100" rx="64" fill="url(#g)"/>
+  <circle cx="450" cy="400" r="210" fill="#fff7ed" opacity=".9"/>
+  <circle cx="370" cy="360" r="32" fill="#0f172a"/>
+  <circle cx="530" cy="360" r="32" fill="#0f172a"/>
+  <path d="M345 485c62 76 151 76 210 0" fill="none" stroke="#0f172a" stroke-width="28" stroke-linecap="round"/>
+  <text x="450" y="760" text-anchor="middle" font-family="Arial, sans-serif" font-size="70" font-weight="800" fill="#831843">快乐占位图</text>
+  <text x="450" y="845" text-anchor="middle" font-family="Arial, sans-serif" font-size="38" fill="#9f1239">把真实搞笑图片替换到这里</text>
+</svg>

@@ -1,0 +1,247 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import { happyHourUploadWhitelist, happyHourUploadConfig } from '~/data/happyHourUpload';
+
+const metadata = {
+  title: '欢乐时光上传',
+  description: '受控上传搞笑图片到欢乐时光。',
+};
+
+const whitelistJson = JSON.stringify(happyHourUploadWhitelist);
+const configJson = JSON.stringify(happyHourUploadConfig);
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <section class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div class="border-b border-slate-200 bg-gradient-to-br from-pink-50 via-white to-amber-50 p-6 dark:border-slate-800 dark:from-pink-500/10 dark:via-slate-900 dark:to-amber-500/10 sm:p-8">
+          <p class="text-sm font-semibold uppercase tracking-[0.28em] text-pink-600 dark:text-pink-300">Private Upload</p>
+          <h1 class="mt-3 text-3xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-4xl">欢乐时光上传入口</h1>
+          <p class="mt-3 max-w-3xl text-sm leading-6 text-slate-600 dark:text-slate-300">
+            第一期先做白名单上传 UI 原型：选择图片、预览、填写标题分类标签，并模拟生成上传记录。后续接入 Cloudflare Access / R2 后再启用真实上传。
+          </p>
+        </div>
+
+        <div class="grid gap-6 p-6 sm:p-8 lg:grid-cols-[0.9fr_1.1fr]" data-happy-upload>
+          <script type="application/json" data-upload-whitelist set:html={whitelistJson}></script>
+          <script type="application/json" data-upload-config set:html={configJson}></script>
+
+          <aside class="space-y-5">
+            <div class="rounded-3xl border border-amber-200 bg-amber-50 p-5 text-sm leading-6 text-amber-900 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-100">
+              <p class="font-bold">当前白名单</p>
+              <p class="mt-2 font-mono text-xs">{happyHourUploadWhitelist.join(', ')}</p>
+              <p class="mt-3 text-xs opacity-80">静态站阶段只做 UI 级验证；真实权限必须在 Cloudflare Access 或后端 API 再校验。</p>
+            </div>
+
+            <label class="block space-y-2">
+              <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">你的邮箱</span>
+              <input data-email-input type="email" value="2942893806@qq.com" placeholder="输入白名单邮箱" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-pink-400 focus:ring-4 focus:ring-pink-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-pink-500/10" />
+            </label>
+
+            <label class="block space-y-2">
+              <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">图片标题</span>
+              <input data-title-input type="text" placeholder="例如：猫猫震惊" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-pink-400 focus:ring-4 focus:ring-pink-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-pink-500/10" />
+            </label>
+
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              <label class="block space-y-2">
+                <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">分类</span>
+                <input data-category-input type="text" placeholder="表情包 / 动物 / 生活梗" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-pink-400 focus:ring-4 focus:ring-pink-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-pink-500/10" />
+              </label>
+
+              <label class="block space-y-2">
+                <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">心情</span>
+                <select data-mood-input class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-pink-400 focus:ring-4 focus:ring-pink-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-pink-500/10">
+                  <option value="爆笑">爆笑</option>
+                  <option value="轻松">轻松</option>
+                  <option value="治愈">治愈</option>
+                  <option value="离谱">离谱</option>
+                </select>
+              </label>
+            </div>
+
+            <label class="block space-y-2">
+              <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">标签</span>
+              <input data-tags-input type="text" placeholder="用逗号分隔，例如：猫,搞笑,离谱" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-pink-400 focus:ring-4 focus:ring-pink-100 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:focus:ring-pink-500/10" />
+            </label>
+
+            <label class="block space-y-2">
+              <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">选择图片</span>
+              <input data-file-input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple class="block w-full rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 text-sm text-slate-600 file:mr-4 file:rounded-full file:border-0 file:bg-pink-500 file:px-4 file:py-2 file:text-sm file:font-bold file:text-white dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300" />
+              <span class="block text-xs text-slate-400 dark:text-slate-500">单张建议不超过 {happyHourUploadConfig.maxFileSizeMb}MB；支持 jpg / png / webp / gif。</span>
+            </label>
+
+            <button data-upload-button type="button" class="w-full rounded-2xl bg-pink-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-pink-200 transition hover:-translate-y-0.5 hover:bg-pink-600 disabled:cursor-not-allowed disabled:opacity-50 dark:shadow-none">
+              模拟上传
+            </button>
+
+            <p data-status class="rounded-2xl bg-slate-100 p-4 text-sm text-slate-600 dark:bg-slate-950 dark:text-slate-300">等待选择图片。</p>
+          </aside>
+
+          <main class="space-y-5">
+            <div class="flex items-center justify-between gap-3">
+              <div>
+                <h2 class="text-xl font-bold text-slate-950 dark:text-white">上传预览</h2>
+                <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">这里会展示待上传图片和模拟生成的记录。</p>
+              </div>
+              <span data-count class="rounded-full bg-pink-50 px-3 py-1 text-xs font-semibold text-pink-700 dark:bg-pink-500/10 dark:text-pink-200">0 张</span>
+            </div>
+
+            <div data-preview-grid class="grid gap-4 sm:grid-cols-2"></div>
+
+            <div class="rounded-3xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-950">
+              <p class="text-sm font-bold text-slate-800 dark:text-slate-100">模拟 manifest 记录</p>
+              <pre data-manifest-preview class="mt-3 max-h-80 overflow-auto whitespace-pre-wrap rounded-2xl bg-slate-950 p-4 text-xs leading-6 text-slate-100">[]</pre>
+            </div>
+          </main>
+        </div>
+      </section>
+    </Reveal>
+  </div>
+</Layout>
+
+<script>
+  type UploadConfig = {
+    maxFileSizeMb: number;
+    acceptedTypes: string[];
+    futureApi: {
+      createUploadUrl: string;
+      commitUpload: string;
+    };
+  };
+
+  const whitelistScript = document.querySelector<HTMLScriptElement>('[data-upload-whitelist]');
+  const configScript = document.querySelector<HTMLScriptElement>('[data-upload-config]');
+  const whitelist: string[] = whitelistScript?.textContent ? JSON.parse(whitelistScript.textContent) : [];
+  const config: UploadConfig = configScript?.textContent ? JSON.parse(configScript.textContent) : { maxFileSizeMb: 10, acceptedTypes: [], futureApi: { createUploadUrl: '', commitUpload: '' } };
+
+  const emailInput = document.querySelector<HTMLInputElement>('[data-email-input]');
+  const titleInput = document.querySelector<HTMLInputElement>('[data-title-input]');
+  const categoryInput = document.querySelector<HTMLInputElement>('[data-category-input]');
+  const moodInput = document.querySelector<HTMLSelectElement>('[data-mood-input]');
+  const tagsInput = document.querySelector<HTMLInputElement>('[data-tags-input]');
+  const fileInput = document.querySelector<HTMLInputElement>('[data-file-input]');
+  const previewGrid = document.querySelector<HTMLElement>('[data-preview-grid]');
+  const uploadButton = document.querySelector<HTMLButtonElement>('[data-upload-button]');
+  const statusLabel = document.querySelector<HTMLElement>('[data-status]');
+  const countLabel = document.querySelector<HTMLElement>('[data-count]');
+  const manifestPreview = document.querySelector<HTMLElement>('[data-manifest-preview]');
+
+  function normalizeEmail(value: string) {
+    return value.trim().toLowerCase();
+  }
+
+  function isAllowed() {
+    return whitelist.map(normalizeEmail).includes(normalizeEmail(emailInput?.value || ''));
+  }
+
+  function escapeHtml(value: string) {
+    return value
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
+  }
+
+  function getValidFiles() {
+    const files = Array.from(fileInput?.files || []);
+    const maxBytes = config.maxFileSizeMb * 1024 * 1024;
+    return files.filter((file) => config.acceptedTypes.includes(file.type) && file.size <= maxBytes);
+  }
+
+  function createRecords(files: File[]) {
+    const now = new Date().toISOString();
+    const title = titleInput?.value.trim() || '未命名快乐图片';
+    const category = categoryInput?.value.trim() || '未分类';
+    const tags = (tagsInput?.value || '')
+      .split(/[，,]/)
+      .map((tag) => tag.trim())
+      .filter(Boolean);
+
+    return files.map((file, index) => {
+      const safeBase = file.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9_-]/g, '-').replace(/-+/g, '-').slice(0, 40) || 'image';
+      const id = `hh_${Date.now()}_${String(index + 1).padStart(3, '0')}`;
+      return {
+        id,
+        title: files.length > 1 ? `${title} ${index + 1}` : title,
+        src: `/happy-hour/${safeBase}`,
+        thumb: `/happy-hour/${safeBase}`,
+        category,
+        tags,
+        mood: moodInput?.value || '爆笑',
+        uploadedBy: normalizeEmail(emailInput?.value || ''),
+        originalName: file.name,
+        size: file.size,
+        createdAt: now,
+        status: 'draft',
+      };
+    });
+  }
+
+  function renderPreview() {
+    const files = getValidFiles();
+    if (countLabel) countLabel.textContent = `${files.length} 张`;
+
+    if (previewGrid) {
+      previewGrid.innerHTML = files.map((file) => {
+        const url = URL.createObjectURL(file);
+        const sizeMb = (file.size / 1024 / 1024).toFixed(2);
+        return `
+          <article class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <img src="${url}" alt="${escapeHtml(file.name)}" class="h-56 w-full object-cover" />
+            <div class="space-y-1 p-4">
+              <p class="truncate text-sm font-bold text-slate-800 dark:text-slate-100">${escapeHtml(file.name)}</p>
+              <p class="text-xs text-slate-500 dark:text-slate-400">${escapeHtml(file.type || 'unknown')} · ${sizeMb}MB</p>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    if (manifestPreview) manifestPreview.textContent = JSON.stringify(createRecords(files), null, 2);
+
+    const rawCount = fileInput?.files?.length || 0;
+    const invalidCount = rawCount - files.length;
+    if (statusLabel) {
+      statusLabel.textContent = invalidCount > 0
+        ? `已过滤 ${invalidCount} 个不符合类型或大小限制的文件。`
+        : files.length > 0 ? `已选择 ${files.length} 张图片，可模拟上传。` : '等待选择图片。';
+    }
+  }
+
+  function updatePermissionState() {
+    const allowed = isAllowed();
+    if (uploadButton) uploadButton.disabled = !allowed;
+    if (statusLabel && !allowed) statusLabel.textContent = '当前邮箱不在上传白名单内。';
+    if (allowed) renderPreview();
+  }
+
+  emailInput?.addEventListener('input', updatePermissionState);
+  titleInput?.addEventListener('input', renderPreview);
+  categoryInput?.addEventListener('input', renderPreview);
+  moodInput?.addEventListener('change', renderPreview);
+  tagsInput?.addEventListener('input', renderPreview);
+  fileInput?.addEventListener('change', renderPreview);
+
+  uploadButton?.addEventListener('click', () => {
+    if (!isAllowed()) {
+      if (statusLabel) statusLabel.textContent = '拒绝上传：当前邮箱不在白名单内。';
+      return;
+    }
+
+    const files = getValidFiles();
+    if (!files.length) {
+      if (statusLabel) statusLabel.textContent = '请先选择符合要求的图片。';
+      return;
+    }
+
+    if (statusLabel) {
+      statusLabel.textContent = `模拟成功：已生成 ${files.length} 条草稿记录。下一期会调用 ${config.futureApi.createUploadUrl} 获取真实上传地址。`;
+    }
+  });
+
+  updatePermissionState();
+</script>

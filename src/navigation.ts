@@ -29,6 +29,10 @@ export const headerData = {
       href: getPermalink('/games'),
     },
     {
+      text: '欢乐时光',
+      href: getPermalink('/happy-hour'),
+    },
+    {
       text: '更多',
       links: [
         {
@@ -70,6 +74,7 @@ export const footerData = {
         { text: '工具箱', href: getPermalink('/tools') },
         { text: '前端实验室', href: getPermalink('/lab') },
         { text: '童年游戏', href: getPermalink('/games') },
+        { text: '欢乐时光', href: getPermalink('/happy-hour') },
         { text: '状态页', href: getPermalink('/status') },
       ],
     },

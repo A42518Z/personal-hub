@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="980" viewBox="0 0 900 980">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#fb7185"/></linearGradient>
+  </defs>
+  <rect width="900" height="980" rx="64" fill="url(#g)"/>
+  <path d="M255 285c90-105 300-105 390 0 85 100 56 280-195 435-251-155-280-335-195-435z" fill="#fff1f2" opacity=".95"/>
+  <text x="450" y="430" text-anchor="middle" font-family="Arial, sans-serif" font-size="58" font-weight="900" fill="#881337">今日份</text>
+  <text x="450" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="58" font-weight="900" fill="#881337">精神状态</text>
+  <text x="450" y="640" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" fill="#9f1239">稳定中带点离谱</text>
+</svg>

@@ -1,0 +1,151 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: 'WebRTC 摄像头录制实验',
+  description: '调用摄像头与麦克风，使用 MediaRecorder 在浏览器本地录制视频。',
+};
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-6xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
+    <section class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div class="grid gap-8 p-6 lg:grid-cols-[1.1fr_0.9fr] lg:p-8">
+        <div class="space-y-5">
+          <a href="/lab" class="text-sm font-semibold text-cyan-700 hover:text-cyan-600 dark:text-cyan-300">← 返回实验室</a>
+          <div>
+            <p class="text-sm font-semibold uppercase tracking-[0.28em] text-cyan-600 dark:text-cyan-300">WebRTC</p>
+            <h1 class="mt-3 text-3xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-4xl">摄像头录制</h1>
+            <p class="mt-4 max-w-2xl text-slate-600 dark:text-slate-300">
+              使用 <code>getUserMedia</code> 获取音视频流，再通过 <code>MediaRecorder</code> 在浏览器本地录制、回放和下载 WebM 视频。
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <button id="startCamera" class="rounded-full bg-cyan-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-500">开启设备</button>
+            <button id="startRecord" disabled class="rounded-full bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-rose-500 disabled:cursor-not-allowed disabled:opacity-45">开始录制</button>
+            <button id="stopRecord" disabled class="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-45 dark:bg-white dark:text-slate-950">停止录制</button>
+            <button id="stopCamera" disabled class="rounded-full border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-45 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">关闭设备</button>
+          </div>
+          <p id="recordStatus" class="rounded-2xl bg-slate-100 px-4 py-3 text-sm text-slate-700 dark:bg-slate-800 dark:text-slate-200">请点击“开启设备”，并允许浏览器访问摄像头和麦克风。</p>
+        </div>
+
+        <div class="rounded-[1.5rem] border border-slate-200 bg-slate-950 p-3 dark:border-slate-700">
+          <video id="livePreview" class="aspect-video w-full rounded-[1.1rem] bg-slate-900 object-cover" autoplay playsinline muted></video>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <div class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <h2 class="text-xl font-bold text-slate-950 dark:text-white">录制结果</h2>
+        <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">录制文件只在本地浏览器中生成，不会上传到服务器。Safari 如不支持 WebM，请换用 Chrome 或 Edge。</p>
+        <a id="downloadVideo" class="mt-5 inline-flex cursor-not-allowed rounded-full bg-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-400">下载视频</a>
+      </div>
+
+      <div class="rounded-[2rem] border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <video id="recordedVideo" class="aspect-video w-full rounded-[1.4rem] bg-slate-100 object-contain dark:bg-slate-950" controls playsinline></video>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<script>
+  const livePreview = document.querySelector('#livePreview');
+  const recordedVideo = document.querySelector('#recordedVideo');
+  const startCameraButton = document.querySelector('#startCamera');
+  const startRecordButton = document.querySelector('#startRecord');
+  const stopRecordButton = document.querySelector('#stopRecord');
+  const stopCameraButton = document.querySelector('#stopCamera');
+  const status = document.querySelector('#recordStatus');
+  const download = document.querySelector('#downloadVideo');
+
+  let stream;
+  let recorder;
+  let chunks = [];
+  let currentObjectUrl;
+
+  const setStatus = (message) => {
+    status.textContent = message;
+  };
+
+  const resetDownload = () => {
+    if (currentObjectUrl) URL.revokeObjectURL(currentObjectUrl);
+    currentObjectUrl = undefined;
+    download.removeAttribute('href');
+    download.removeAttribute('download');
+    download.className = 'mt-5 inline-flex cursor-not-allowed rounded-full bg-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-500 dark:bg-slate-800 dark:text-slate-400';
+  };
+
+  const stopCamera = () => {
+    if (recorder?.state === 'recording') recorder.stop();
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+      stream = undefined;
+    }
+    livePreview.srcObject = null;
+    startCameraButton.disabled = false;
+    startRecordButton.disabled = true;
+    stopRecordButton.disabled = true;
+    stopCameraButton.disabled = true;
+    setStatus('设备已关闭。');
+  };
+
+  startCameraButton.addEventListener('click', async () => {
+    if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
+      setStatus('当前浏览器不支持 getUserMedia 或 MediaRecorder，请使用最新版 Chrome、Edge、Firefox。');
+      return;
+    }
+
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      livePreview.srcObject = stream;
+      startCameraButton.disabled = true;
+      startRecordButton.disabled = false;
+      stopCameraButton.disabled = false;
+      setStatus('设备已开启，可以开始录制。');
+    } catch (error) {
+      setStatus(`设备开启失败：${error instanceof Error ? error.message : '请检查权限或设备占用状态。'}`);
+    }
+  });
+
+  startRecordButton.addEventListener('click', () => {
+    if (!stream) return;
+
+    resetDownload();
+    recordedVideo.removeAttribute('src');
+    recordedVideo.load();
+    chunks = [];
+    const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9,opus')
+      ? 'video/webm;codecs=vp9,opus'
+      : 'video/webm';
+    recorder = new MediaRecorder(stream, { mimeType });
+
+    recorder.addEventListener('dataavailable', (event) => {
+      if (event.data.size > 0) chunks.push(event.data);
+    });
+
+    recorder.addEventListener('stop', () => {
+      const blob = new Blob(chunks, { type: recorder.mimeType || 'video/webm' });
+      currentObjectUrl = URL.createObjectURL(blob);
+      recordedVideo.src = currentObjectUrl;
+      download.href = currentObjectUrl;
+      download.download = `webrtc-record-${Date.now()}.webm`;
+      download.className = 'mt-5 inline-flex rounded-full bg-cyan-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-cyan-500';
+      startRecordButton.disabled = false;
+      stopRecordButton.disabled = true;
+      setStatus('录制完成，可回放或下载视频。');
+    });
+
+    recorder.start();
+    startRecordButton.disabled = true;
+    stopRecordButton.disabled = false;
+    setStatus('正在录制中……点击“停止录制”生成视频。');
+  });
+
+  stopRecordButton.addEventListener('click', () => {
+    if (recorder?.state === 'recording') recorder.stop();
+  });
+
+  stopCameraButton.addEventListener('click', stopCamera);
+  window.addEventListener('pagehide', stopCamera);
+</script>

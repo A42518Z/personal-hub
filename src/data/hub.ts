@@ -49,6 +49,9 @@ export const tools: HubGroup[] = [
 ];
 
 export const labs: HubItem[] = [
+  { title: 'WebRTC 摄像头拍照', description: '开启摄像头预览，并将当前视频帧截取为 PNG 图片。', href: '/lab/webrtc-take-photos', badge: 'WebRTC', status: 'online' },
+  { title: 'WebRTC 摄像头录制', description: '调用摄像头和麦克风，使用 MediaRecorder 本地录制、回放和下载视频。', href: '/lab/webrtc-record', badge: 'MediaRecorder', status: 'online' },
+  { title: 'WebRTC P2P 通信', description: '模拟两个 RTCPeerConnection，通过 DataChannel 完成点对点消息通信。', href: '/lab/webrtc-p2p', badge: 'P2P', status: 'online' },
   { title: '粒子背景', description: '用于首页 Hero 或特殊展示页的动态背景。', href: '/lab#particles', badge: 'Canvas', status: 'planned' },
   { title: '玻璃拟态', description: '毛玻璃卡片、光晕和深色模式组合。', href: '/lab#glass', badge: 'UI', status: 'planned' },
   { title: '鼠标跟随光效', description: '基于鼠标位置的聚光和渐变效果。', href: '/lab#cursor', badge: 'Motion', status: 'planned' },
