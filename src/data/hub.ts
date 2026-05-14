@@ -12,6 +12,7 @@ export type HubGroup = {
   items: HubItem[];
 };
 
+
 export const quickLinks: HubItem[] = [
   { title: '博客', description: '成长记录、技术复盘和生活随笔。', href: '/blog', badge: 'Content' },
   { title: '导航', description: '常用网站、AI 工具、前端文档与学习平台。', href: '/bookmarks', badge: 'Links' },
