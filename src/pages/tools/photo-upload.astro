@@ -1,0 +1,185 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+
+const metadata = {
+  title: '手机批量图片上传',
+  description: '面向手机相册的大批量图片选择、压缩、预览、队列上传和失败重试工具。',
+};
+---
+
+<Layout metadata={metadata}>
+  <main class="mx-auto max-w-5xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+    <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
+      <div class="space-y-5 bg-gradient-to-br from-sky-50 via-white to-violet-50 px-5 py-6 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900 sm:px-8 sm:py-10">
+        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-sky-600 dark:text-sky-300">Photo Uploader</p>
+        <div class="max-w-3xl space-y-3">
+          <h1 class="text-3xl font-bold tracking-tight text-slate-950 dark:text-white sm:text-5xl">手机相册批量上传</h1>
+          <p class="text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg">一次选择多张图片，先在手机本地生成缩略图和压缩文件，再按队列上传。适合移动网络下的大批量照片整理。</p>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-3">
+          <div class="rounded-2xl bg-white/80 p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900/80 dark:ring-slate-800"><p class="text-2xl font-bold text-slate-950 dark:text-white" data-total-count>0</p><p class="text-sm text-slate-500 dark:text-slate-400">已选择</p></div>
+          <div class="rounded-2xl bg-white/80 p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900/80 dark:ring-slate-800"><p class="text-2xl font-bold text-emerald-600 dark:text-emerald-300" data-done-count>0</p><p class="text-sm text-slate-500 dark:text-slate-400">已完成</p></div>
+          <div class="rounded-2xl bg-white/80 p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900/80 dark:ring-slate-800"><p class="text-2xl font-bold text-rose-600 dark:text-rose-300" data-failed-count>0</p><p class="text-sm text-slate-500 dark:text-slate-400">失败</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rounded-3xl border border-dashed border-sky-300 bg-sky-50/70 p-4 dark:border-sky-900 dark:bg-sky-950/30 sm:p-6">
+      <div class="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div class="space-y-2">
+          <h2 class="text-xl font-semibold text-slate-950 dark:text-white">选择图片</h2>
+          <p class="text-sm leading-6 text-slate-600 dark:text-slate-300">支持多选相册图片。默认压缩到最长边 1600px、质量 0.82，并以最多 3 张并发的方式上传。</p>
+        </div>
+        <div class="grid grid-cols-2 gap-3 sm:flex">
+          <label class="flex min-h-14 cursor-pointer items-center justify-center rounded-2xl bg-sky-600 px-5 py-3 text-center text-sm font-semibold text-white shadow-sm transition hover:bg-sky-500 active:scale-[0.99]">选择多图<input class="sr-only" data-file-input type="file" accept="image/*" multiple /></label>
+          <label class="flex min-h-14 cursor-pointer items-center justify-center rounded-2xl bg-slate-950 px-5 py-3 text-center text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 active:scale-[0.99] dark:bg-white dark:text-slate-950">拍照上传<input class="sr-only" data-camera-input type="file" accept="image/*" capture="environment" multiple /></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid gap-4 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-950 sm:p-6">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div><h2 class="text-xl font-semibold text-slate-950 dark:text-white">上传队列</h2><p class="text-sm text-slate-500 dark:text-slate-400" data-helper-text>还没有选择图片。</p></div>
+        <div class="flex gap-2"><button class="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-40" data-start-button disabled>开始上传</button><button class="rounded-xl bg-slate-100 px-4 py-2 text-sm font-semibold text-slate-700 disabled:cursor-not-allowed disabled:opacity-40 dark:bg-slate-900 dark:text-slate-200" data-clear-button disabled>清空</button></div>
+      </div>
+      <div class="h-3 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-900"><div class="h-full w-0 rounded-full bg-gradient-to-r from-sky-500 to-emerald-500 transition-all" data-total-progress></div></div>
+      <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" data-gallery></div>
+    </section>
+
+    <section class="rounded-3xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/40">
+      <h2 class="text-lg font-semibold text-slate-950 dark:text-white">接入真实上传接口</h2>
+      <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">当前页面内置的是模拟上传，用来验证手机端批量选择、压缩、预览、队列、进度和失败重试体验。后续只需要替换脚本中的 <code>uploadImage</code> 方法，即可接入本地 API、Cloudflare R2、S3、OSS 或 COS。</p>
+    </section>
+  </main>
+</Layout>
+
+<script is:inline>
+  const MAX_IMAGES = 100;
+  const MAX_EDGE = 1600;
+  const JPEG_QUALITY = 0.82;
+  const CONCURRENCY = 3;
+  let queue = [];
+  let running = 0;
+  let started = false;
+
+  const $ = (selector) => document.querySelector(selector);
+  const fileInput = $('[data-file-input]');
+  const cameraInput = $('[data-camera-input]');
+  const gallery = $('[data-gallery]');
+  const startButton = $('[data-start-button]');
+  const clearButton = $('[data-clear-button]');
+  const helperText = $('[data-helper-text]');
+  const totalProgress = $('[data-total-progress]');
+  const totalCount = $('[data-total-count]');
+  const doneCount = $('[data-done-count]');
+  const failedCount = $('[data-failed-count]');
+
+  const formatSize = (bytes) => bytes < 1024 * 1024 ? `${Math.round(bytes / 1024)}KB` : `${(bytes / 1024 / 1024).toFixed(1)}MB`;
+  const escapeText = (value) => String(value).replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+
+  function statusText(item) {
+    return ({ ready: '待处理', compressing: '压缩中', queued: '排队中', uploading: `上传中 ${item.progress}%`, done: '已完成', failed: item.error || '失败，可重试' })[item.status];
+  }
+
+  function updateStats() {
+    const done = queue.filter((item) => item.status === 'done').length;
+    const failed = queue.filter((item) => item.status === 'failed').length;
+    const avg = queue.length ? Math.round(queue.reduce((sum, item) => sum + item.progress, 0) / queue.length) : 0;
+    totalCount.textContent = String(queue.length);
+    doneCount.textContent = String(done);
+    failedCount.textContent = String(failed);
+    totalProgress.style.width = `${avg}%`;
+    startButton.disabled = queue.length === 0 || queue.every((item) => item.status === 'done') || started;
+    clearButton.disabled = queue.length === 0 || running > 0;
+    helperText.textContent = queue.length ? `已加入 ${queue.length} 张图片，${done} 张完成，${failed} 张失败。` : '还没有选择图片。';
+  }
+
+  function renderGallery() {
+    gallery.innerHTML = queue.map((item) => `
+      <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div class="relative aspect-square bg-slate-100 dark:bg-slate-800">
+          <img class="h-full w-full object-cover" src="${item.preview}" alt="${escapeText(item.file.name)}" loading="lazy" />
+          <span class="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-1 text-xs font-medium text-white">${statusText(item)}</span>
+        </div>
+        <div class="space-y-2 p-3">
+          <p class="truncate text-sm font-medium text-slate-900 dark:text-white" title="${escapeText(item.file.name)}">${escapeText(item.file.name)}</p>
+          <p class="text-xs text-slate-500 dark:text-slate-400">原图 ${formatSize(item.file.size)}${item.compressed ? ` · 压缩 ${formatSize(item.compressed.size)}` : ''}</p>
+          <div class="h-2 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800"><div class="h-full rounded-full ${item.status === 'failed' ? 'bg-rose-500' : 'bg-sky-500'}" style="width:${item.progress}%"></div></div>
+          ${item.status === 'failed' ? `<button class="w-full rounded-xl bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 dark:bg-rose-950 dark:text-rose-200" data-retry-id="${item.id}">重试</button>` : ''}
+        </div>
+      </article>`).join('');
+    document.querySelectorAll('[data-retry-id]').forEach((button) => button.addEventListener('click', () => retryItem(button.dataset.retryId)));
+    updateStats();
+  }
+
+  async function compressImage(file) {
+    const bitmap = await createImageBitmap(file);
+    const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bitmap.width * scale);
+    canvas.height = Math.round(bitmap.height * scale);
+    canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    bitmap.close?.();
+    return await new Promise((resolve, reject) => canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('图片压缩失败')), 'image/jpeg', JPEG_QUALITY));
+  }
+
+  async function addFiles(fileList) {
+    const images = Array.from(fileList).filter((file) => file.type.startsWith('image/')).slice(0, Math.max(0, MAX_IMAGES - queue.length));
+    const items = images.map((file) => ({ id: `${Date.now()}-${crypto.randomUUID?.() || Math.random().toString(16).slice(2)}`, file, preview: URL.createObjectURL(file), status: 'ready', progress: 0, retries: 0 }));
+    queue = [...queue, ...items];
+    renderGallery();
+    for (const item of items) {
+      item.status = 'compressing';
+      renderGallery();
+      try {
+        item.compressed = await compressImage(item.file);
+        item.status = 'queued';
+      } catch (_) {
+        item.status = 'failed';
+        item.error = '压缩失败';
+      }
+      renderGallery();
+    }
+  }
+
+  async function uploadImage(item) {
+    // TODO: 替换为真实接口，例如 fetch('/api/photos/upload', { method: 'POST', body: formData })。
+    for (let progress = item.progress; progress <= 100; progress += 8 + Math.round(Math.random() * 12)) {
+      await new Promise((resolve) => setTimeout(resolve, 120));
+      item.progress = Math.min(100, progress);
+      renderGallery();
+    }
+    if (Math.random() < 0.08 && item.retries < 1) throw new Error('网络波动，请重试');
+  }
+
+  function pumpQueue() {
+    if (!started) return;
+    while (running < CONCURRENCY) {
+      const next = queue.find((item) => item.status === 'queued');
+      if (!next) break;
+      next.status = 'uploading';
+      next.error = undefined;
+      running += 1;
+      renderGallery();
+      uploadImage(next).then(() => { next.status = 'done'; next.progress = 100; }).catch((error) => { next.status = 'failed'; next.progress = Math.max(5, next.progress); next.error = error?.message || '上传失败'; }).finally(() => { running -= 1; if (!queue.some((item) => item.status === 'queued' || item.status === 'uploading')) started = false; renderGallery(); pumpQueue(); });
+    }
+  }
+
+  function retryItem(id) {
+    const item = queue.find((entry) => entry.id === id);
+    if (!item) return;
+    item.status = 'queued';
+    item.progress = 0;
+    item.error = undefined;
+    item.retries += 1;
+    started = true;
+    renderGallery();
+    pumpQueue();
+  }
+
+  fileInput?.addEventListener('change', (event) => addFiles(event.target.files || []));
+  cameraInput?.addEventListener('change', (event) => addFiles(event.target.files || []));
+  startButton?.addEventListener('click', () => { started = true; pumpQueue(); updateStats(); });
+  clearButton?.addEventListener('click', () => { queue.forEach((item) => URL.revokeObjectURL(item.preview)); queue = []; started = false; running = 0; renderGallery(); });
+  renderGallery();
+</script>

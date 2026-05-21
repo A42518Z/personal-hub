@@ -31,6 +31,13 @@ export const projects: HubItem[] = [
 
 export const tools: HubGroup[] = [
   {
+    title: '图片处理',
+    description: '面向手机端和个人素材整理的图片工具。',
+    items: [
+      { title: '手机批量图片上传', description: '一次选择多张图片，本地压缩、预览、队列上传和失败重试。', href: '/tools/photo-upload', status: 'online', badge: 'Mobile' },
+    ],
+  },
+  {
     title: '文本处理',
     description: '常用编码、格式化和转换工具。',
     items: [
@@ -50,6 +57,7 @@ export const tools: HubGroup[] = [
 ];
 
 export const labs: HubItem[] = [
+  { title: 'Vue 卡片虚拟分页', description: '从独立 Vue demo 迁入：大页数卡片虚拟滚动、停稳加载、缓存窗口、模拟请求与滚轮速度跳页。', href: '/lab/vue-virtual-card-scroll', badge: 'Virtual Paging', status: 'online' },
   { title: 'WebRTC 摄像头拍照', description: '开启摄像头预览，并将当前视频帧截取为 PNG 图片。', href: '/lab/webrtc-take-photos', badge: 'WebRTC', status: 'online' },
   { title: 'WebRTC 摄像头录制', description: '调用摄像头和麦克风，使用 MediaRecorder 本地录制、回放和下载视频。', href: '/lab/webrtc-record', badge: 'MediaRecorder', status: 'online' },
   { title: 'WebRTC P2P 通信', description: '模拟两个 RTCPeerConnection，通过 DataChannel 完成点对点消息通信。', href: '/lab/webrtc-p2p', badge: 'P2P', status: 'online' },
