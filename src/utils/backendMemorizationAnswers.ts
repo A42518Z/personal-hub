@@ -1,7 +1,6 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-
 import { createMarkdownProcessor } from '@astrojs/markdown-remark';
+
+import answerManifest from '../data/learn/backend-memorization/answers/manifest.json';
 
 export interface MemorizationAnswer {
   title: string;
@@ -19,6 +18,7 @@ interface AnswerManifestEntry {
   title: string;
   file: string;
   sourcePath: string;
+  content: string;
 }
 
 interface AnswerManifest {
@@ -27,7 +27,7 @@ interface AnswerManifest {
   duplicateTitles?: string[];
 }
 
-const manifestPath = fileURLToPath(new URL('../data/learn/backend-memorization/answers/manifest.json', import.meta.url));
+const manifest = answerManifest as AnswerManifest;
 
 const stripFrontmatter = (content: string) =>
   content.replace(/^\uFEFF?---\r?\n[\s\S]*?\r?\n---(?:\r?\n|$)/, '');
@@ -59,15 +59,6 @@ export const extractQuestionTitles = (markdownContents: string[]) => {
 export const loadMemorizationAnswers = async (
   questionTitles: string[]
 ): Promise<MemorizationAnswerLoadResult> => {
-  if (!existsSync(manifestPath)) {
-    return {
-      answers: [],
-      missingTitles: questionTitles,
-      duplicateTitles: [],
-    };
-  }
-
-  const manifest = JSON.parse(readFileSync(manifestPath, 'utf8')) as AnswerManifest;
   const manifestByTitle = new Map(manifest.answers.map((answer) => [answer.title, answer]));
   const processor = await createMarkdownProcessor({
     gfm: true,
@@ -79,17 +70,9 @@ export const loadMemorizationAnswers = async (
 
   for (const questionTitle of questionTitles) {
     const manifestEntry = manifestByTitle.get(questionTitle);
-    if (!manifestEntry) continue;
+    if (!manifestEntry || typeof manifestEntry.content !== 'string') continue;
 
-    const answerPath = new URL(
-      `../data/learn/backend-memorization/answers/${encodeURIComponent(manifestEntry.file)}`,
-      import.meta.url
-    );
-    const filePath = fileURLToPath(answerPath);
-    if (!existsSync(filePath)) continue;
-
-    const rawContent = readFileSync(filePath, 'utf8');
-    const content = stripLeadingTitle(stripFrontmatter(rawContent)).trim();
+    const content = stripLeadingTitle(stripFrontmatter(manifestEntry.content)).trim();
     const rendered = await processor.render(content);
 
     answers.push({

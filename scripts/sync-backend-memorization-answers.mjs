@@ -141,6 +141,7 @@ for (const questionTitle of questionTitles) {
     title: questionTitle,
     file: targetFileName,
     sourcePath: toPortablePath(relative(sourceRoot, selected)),
+    content: sourceContent,
   });
 }
 

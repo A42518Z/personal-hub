@@ -198,7 +198,7 @@ const answerJson = JSON.stringify(answerPayload).replace(/</g, '\\u003c');
 
         while ((match = pattern.exec(text)) !== null) {
           fragment.append(text.slice(lastIndex, match.index));
-          const title = match[1].split('|', 1)[0].split('#', 1)[0].trim();
+          const title = match[1].split('|', 1)[0].trim();
           const button = document.createElement('button');
           button.type = 'button';
           button.className = 'question-trigger';
