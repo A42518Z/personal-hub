@@ -12,11 +12,11 @@ export type HubGroup = {
   items: HubItem[];
 };
 
-
 export const quickLinks: HubItem[] = [
   { title: '博客', description: '成长记录、技术复盘和生活随笔。', href: '/blog', badge: 'Content' },
   { title: '导航', description: '常用网站、AI 工具、前端文档与学习平台。', href: '/bookmarks', badge: 'Links' },
   { title: '项目', description: '项目入口、截图、复盘和亮点沉淀。', href: '/projects', badge: 'Works' },
+  { title: '学习训练', description: 'Java 基础、面试题、代码输出题和错题复盘。', href: '/learn', badge: 'Practice' },
   { title: '工具箱', description: 'JSON、时间戳、Base64、正则等开发小工具。', href: '/tools', badge: 'Tools' },
   { title: '实验室', description: '粒子背景、玻璃拟态、3D 卡片、Canvas 动效。', href: '/lab', badge: 'Labs' },
   { title: '童年游戏', description: '上传本地 NES ROM，在浏览器里运行红白机游戏。', href: '/games', badge: 'NES' },

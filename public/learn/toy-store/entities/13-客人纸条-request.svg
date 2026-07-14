@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">客人纸条对应Request的卡通场景图</title>
+  <desc id="desc">以网上玩具店为背景，展示客人纸条：请求。</desc>
+  <rect width="960" height="540" rx="36" fill="#EFF6FF"/>
+  <circle cx="90" cy="88" r="38" fill="#FDE68A"/>
+  <path d="M0 440 C190 390 305 474 478 426 C650 378 770 438 960 392 L960 540 L0 540Z" fill="#DBEAFE" opacity=".8"/>
+  <text x="480" y="62" text-anchor="middle" font-size="34" font-family="Arial, sans-serif" font-weight="900" fill="#2563EB">客人纸条</text>
+  <text x="480" y="104" text-anchor="middle" font-size="22" font-family="Arial, sans-serif" font-weight="700" fill="#334155">Request</text>
+  
+    <rect x="390" y="145" width="310" height="255" rx="38" fill="#fff" stroke="#2563EB" stroke-width="7"/>
+    <rect x="440" y="205" width="210" height="125" rx="24" fill="#DBEAFE"/>
+    <circle cx="495" cy="267" r="28" fill="#2563EB" opacity=".85"/>
+    <rect x="540" y="238" width="75" height="18" rx="9" fill="#2563EB"/>
+    <rect x="540" y="270" width="58" height="18" rx="9" fill="#2563EB" opacity=".72"/>
+    <rect x="540" y="302" width="88" height="18" rx="9" fill="#2563EB" opacity=".5"/>
+    <path d="M420 367 Q545 420 670 367" fill="none" stroke="#2563EB" stroke-width="7" stroke-linecap="round"/>
+  
+  <rect x="90" y="435" width="780" height="62" rx="20" fill="#fff" opacity=".95" stroke="#2563EB" stroke-width="3"/>
+  <text x="480" y="474" text-anchor="middle" font-size="21" font-family="Arial, sans-serif" font-weight="700" fill="#334155">请求</text>
+</svg>

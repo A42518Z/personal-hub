@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">网上玩具店：Spring 体系</title>
+  <desc id="desc">卡通风格图示，Spring 大管家管理 MVC、Boot、Security、Cloud 等角色。</desc>
+  <rect width="960" height="540" rx="36" fill="#F0FDF4"/>
+  <rect x="92" y="80" width="776" height="380" rx="36" fill="#FFFFFF" stroke="#22C55E" stroke-width="7"/>
+  <circle cx="480" cy="216" r="64" fill="#BBF7D0" stroke="#16A34A" stroke-width="6"/>
+  <rect x="432" y="272" width="96" height="112" rx="28" fill="#34D399"/>
+  <text x="480" y="210" text-anchor="middle" font-size="28" font-weight="900" fill="#166534">Spring</text>
+  <text x="480" y="242" text-anchor="middle" font-size="20" font-weight="700" fill="#166534">大管家</text>
+
+  <rect x="120" y="130" width="180" height="74" rx="22" fill="#DCFCE7" stroke="#22C55E" stroke-width="4"/>
+  <text x="210" y="162" text-anchor="middle" font-size="21" font-weight="800" fill="#166534">Framework</text>
+  <text x="210" y="188" text-anchor="middle" font-size="17" fill="#166534">底层管家</text>
+
+  <rect x="660" y="130" width="180" height="74" rx="22" fill="#DBEAFE" stroke="#3B82F6" stroke-width="4"/>
+  <text x="750" y="162" text-anchor="middle" font-size="21" font-weight="800" fill="#1D4ED8">MVC</text>
+  <text x="750" y="188" text-anchor="middle" font-size="17" fill="#1D4ED8">管网页请求</text>
+
+  <rect x="120" y="332" width="180" height="74" rx="22" fill="#FEF3C7" stroke="#F59E0B" stroke-width="4"/>
+  <text x="210" y="364" text-anchor="middle" font-size="21" font-weight="800" fill="#92400E">Boot</text>
+  <text x="210" y="390" text-anchor="middle" font-size="17" fill="#92400E">快速开店套装</text>
+
+  <rect x="660" y="332" width="180" height="74" rx="22" fill="#FCE7F3" stroke="#EC4899" stroke-width="4"/>
+  <text x="750" y="364" text-anchor="middle" font-size="21" font-weight="800" fill="#9D174D">Security</text>
+  <text x="750" y="390" text-anchor="middle" font-size="17" fill="#9D174D">门禁检查</text>
+
+  <rect x="390" y="400" width="180" height="74" rx="22" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="4"/>
+  <text x="480" y="432" text-anchor="middle" font-size="21" font-weight="800" fill="#5B21B6">Cloud</text>
+  <text x="480" y="458" text-anchor="middle" font-size="17" fill="#5B21B6">分店协作</text>
+
+  <path d="M300 170 C360 178 396 190 424 208" fill="none" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/>
+  <path d="M660 170 C600 178 564 190 536 208" fill="none" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/>
+  <path d="M300 370 C360 348 396 330 432 290" fill="none" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/>
+  <path d="M660 370 C600 348 564 330 528 290" fill="none" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/>
+  <path d="M480 400 V384" stroke="#16A34A" stroke-width="7" stroke-linecap="round"/>
+</svg>

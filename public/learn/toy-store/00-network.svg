@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">网上玩具店：计算机与网络基础</title>
+  <desc id="desc">卡通风格的信息图，展示浏览器、DNS、道路、服务器大楼、端口门牌和 HTTP 纸条。</desc>
+  <rect width="960" height="540" rx="36" fill="#E0F2FE"/>
+  <circle cx="110" cy="86" r="42" fill="#FDE68A"/>
+  <path d="M0 410 C160 360 260 450 420 398 C590 340 710 418 960 355 L960 540 L0 540Z" fill="#BAE6FD"/>
+  <path d="M0 455 C210 405 310 490 485 430 C650 372 750 445 960 398 L960 540 L0 540Z" fill="#7DD3FC" opacity=".65"/>
+
+  <rect x="72" y="224" width="180" height="118" rx="24" fill="#FFFFFF" stroke="#0EA5E9" stroke-width="5"/>
+  <rect x="94" y="248" width="136" height="52" rx="12" fill="#DBEAFE"/>
+  <text x="162" y="281" text-anchor="middle" font-size="24" font-weight="700" fill="#075985">浏览器</text>
+  <circle cx="125" cy="330" r="12" fill="#38BDF8"/>
+  <circle cx="162" cy="330" r="12" fill="#F97316"/>
+  <circle cx="199" cy="330" r="12" fill="#22C55E"/>
+
+  <rect x="345" y="94" width="150" height="94" rx="22" fill="#FFF7ED" stroke="#FB923C" stroke-width="5"/>
+  <text x="420" y="134" text-anchor="middle" font-size="24" font-weight="700" fill="#9A3412">DNS</text>
+  <text x="420" y="164" text-anchor="middle" font-size="18" fill="#9A3412">电话簿</text>
+
+  <path d="M245 276 C315 240 345 205 398 180" fill="none" stroke="#0284C7" stroke-width="10" stroke-linecap="round" stroke-dasharray="18 16"/>
+  <path d="M492 160 C590 140 648 170 704 221" fill="none" stroke="#0284C7" stroke-width="10" stroke-linecap="round" stroke-dasharray="18 16"/>
+  <path d="M246 305 C404 410 570 420 706 322" fill="none" stroke="#F97316" stroke-width="10" stroke-linecap="round"/>
+  <text x="475" y="384" text-anchor="middle" font-size="22" font-weight="700" fill="#9A3412">HTTP 纸条沿着网络道路传过去</text>
+
+  <rect x="694" y="160" width="190" height="242" rx="28" fill="#FFFFFF" stroke="#0369A1" stroke-width="6"/>
+  <rect x="724" y="198" width="132" height="48" rx="12" fill="#CFFAFE"/>
+  <text x="790" y="230" text-anchor="middle" font-size="25" font-weight="800" fill="#075985">服务器</text>
+  <rect x="726" y="274" width="52" height="76" rx="10" fill="#38BDF8"/>
+  <rect x="804" y="274" width="52" height="76" rx="10" fill="#FBBF24"/>
+  <text x="752" y="318" text-anchor="middle" font-size="18" font-weight="700" fill="#075985">8080</text>
+  <text x="830" y="318" text-anchor="middle" font-size="18" font-weight="700" fill="#92400E">3306</text>
+  <text x="790" y="380" text-anchor="middle" font-size="19" fill="#075985">端口 = 房间门牌号</text>
+
+  <rect x="340" y="250" width="170" height="58" rx="16" fill="#FFFFFF" stroke="#F97316" stroke-width="4"/>
+  <text x="425" y="287" text-anchor="middle" font-size="22" font-weight="700" fill="#C2410C">请求纸条</text>
+</svg>

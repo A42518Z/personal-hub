@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">网上玩具店：Java 语言基础</title>
+  <desc id="desc">卡通风格玩具店员工用 Java 工作语言协作，包含变量、类型、方法、类、对象、集合、线程等元素。</desc>
+  <rect width="960" height="540" rx="36" fill="#F5F3FF"/>
+  <rect x="70" y="92" width="820" height="340" rx="36" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="6"/>
+  <rect x="108" y="136" width="220" height="70" rx="20" fill="#EDE9FE"/>
+  <text x="218" y="180" text-anchor="middle" font-size="27" font-weight="800" fill="#5B21B6">Java 工作语言</text>
+
+  <circle cx="196" cy="296" r="38" fill="#FDE68A" stroke="#92400E" stroke-width="4"/>
+  <rect x="158" y="331" width="76" height="82" rx="20" fill="#60A5FA"/>
+  <text x="196" y="456" text-anchor="middle" font-size="20" font-weight="700" fill="#4C1D95">员工 A</text>
+  <circle cx="480" cy="296" r="38" fill="#FBCFE8" stroke="#9D174D" stroke-width="4"/>
+  <rect x="442" y="331" width="76" height="82" rx="20" fill="#34D399"/>
+  <text x="480" y="456" text-anchor="middle" font-size="20" font-weight="700" fill="#4C1D95">员工 B</text>
+  <circle cx="764" cy="296" r="38" fill="#FED7AA" stroke="#C2410C" stroke-width="4"/>
+  <rect x="726" y="331" width="76" height="82" rx="20" fill="#F87171"/>
+  <text x="764" y="456" text-anchor="middle" font-size="20" font-weight="700" fill="#4C1D95">员工 C</text>
+
+  <rect x="362" y="126" width="120" height="64" rx="16" fill="#FEF3C7" stroke="#F59E0B" stroke-width="4"/>
+  <text x="422" y="165" text-anchor="middle" font-size="22" font-weight="700" fill="#92400E">变量纸条</text>
+  <rect x="516" y="126" width="120" height="64" rx="16" fill="#DCFCE7" stroke="#22C55E" stroke-width="4"/>
+  <text x="576" y="165" text-anchor="middle" font-size="22" font-weight="700" fill="#166534">类型规则</text>
+  <rect x="670" y="126" width="120" height="64" rx="16" fill="#DBEAFE" stroke="#3B82F6" stroke-width="4"/>
+  <text x="730" y="165" text-anchor="middle" font-size="22" font-weight="700" fill="#1D4ED8">方法动作</text>
+
+  <rect x="342" y="236" width="276" height="80" rx="20" fill="#FDF2F8" stroke="#EC4899" stroke-width="4"/>
+  <text x="480" y="270" text-anchor="middle" font-size="22" font-weight="800" fill="#9D174D">类 = 玩具模具</text>
+  <text x="480" y="298" text-anchor="middle" font-size="18" fill="#9D174D">对象 = 真正的红色小汽车</text>
+
+  <rect x="348" y="350" width="264" height="54" rx="16" fill="#ECFEFF" stroke="#06B6D4" stroke-width="4"/>
+  <text x="480" y="384" text-anchor="middle" font-size="21" font-weight="700" fill="#0E7490">线程 = 多个员工同时工作</text>
+
+  <path d="M234 304 C292 250 329 206 386 178" fill="none" stroke="#8B5CF6" stroke-width="8" stroke-linecap="round"/>
+  <path d="M518 304 C545 250 560 210 574 188" fill="none" stroke="#8B5CF6" stroke-width="8" stroke-linecap="round"/>
+  <path d="M726 304 C700 252 705 220 728 188" fill="none" stroke="#8B5CF6" stroke-width="8" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,71 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HubHero from '~/components/hub/HubHero.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import ToyStoreStageCard from '~/components/learn/ToyStoreStageCard.astro';
+import { toyStoreStages } from '~/data/learn/backend-toy-store';
+
+const metadata = {
+  title: '网上玩具店后端路线',
+  description: '用一家网上玩具店的类比，快速理解后端从网络、Java、数据库、缓存、消息队列、微服务、部署协作到安全权限的完整关系。',
+};
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <HubHero
+        eyebrow="Backend Analogy"
+        title="一家超级大的“网上玩具店”。"
+        description="从小朋友点击“我要买一个玩具”开始，把后端背后的网络、Java、JVM、Web、Spring、分层、数据库、Redis、MQ、微服务、部署、协作和安全串成一条能讲明白的故事线。"
+      />
+    </Reveal>
+
+    <Reveal delay={80}>
+      <section class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+        <div class="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+          <div class="p-8">
+            <p class="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-600 dark:text-cyan-300">Start Here</p>
+            <h2 class="mt-3 text-2xl font-black text-slate-950 dark:text-white">先看整体关系，再学每个技术。</h2>
+            <p class="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">
+              这页不是背答案，而是用你的玩具店类比帮新手建立脑内地图。每一站都有关系图、场景图、元素图鉴、类比映射表和“讲给自己听”的复述区。
+            </p>
+            <div class="mt-6 rounded-2xl bg-cyan-50 p-5 text-sm leading-7 text-slate-700 dark:bg-cyan-500/10 dark:text-slate-300">
+              学习顺序：先知道店在哪里，再知道员工怎么工作，然后理解资料怎么存、常用数据怎么加速、慢事情怎么异步处理、店铺变大后怎么拆分、怎么上线、怎么协作、怎么防护。
+            </div>
+          </div>
+          <div class="grid gap-3 bg-slate-50 p-6 dark:bg-slate-950/50 sm:grid-cols-2 lg:grid-cols-3">
+            {toyStoreStages.map((stage) => (
+              <a href={`#${stage.id}`} class="rounded-3xl border border-slate-200 bg-white p-4 transition hover:-translate-y-1 hover:border-cyan-300 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-cyan-500/60">
+                <span class="inline-flex size-9 items-center justify-center rounded-full bg-cyan-100 text-sm font-black text-cyan-700 dark:bg-cyan-500/10 dark:text-cyan-300">{stage.order}</span>
+                <p class="mt-3 text-sm font-bold text-slate-950 dark:text-white">{stage.techTitle}</p>
+                <p class="mt-2 text-xs leading-5 text-slate-500 dark:text-slate-400">{stage.title}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+    </Reveal>
+
+    <div class="space-y-10">
+      {toyStoreStages.map((stage, index) => (
+        <Reveal delay={100 + index * 40}>
+          <ToyStoreStageCard stage={stage} />
+        </Reveal>
+      ))}
+    </div>
+
+    <Reveal delay={320}>
+      <section class="rounded-[2rem] border border-violet-200 bg-violet-50 p-8 dark:border-violet-500/30 dark:bg-violet-500/10">
+        <h2 class="text-2xl font-black text-slate-950 dark:text-white">最后用 3 分钟讲完整条后端链路</h2>
+        <p class="mt-4 text-sm leading-7 text-slate-700 dark:text-slate-300">
+          小朋友点按钮 → 浏览器通过 DNS、网络、端口和 HTTP 找到玩具店 → Java 员工用统一语言办事 → JDK/JVM 让 Java 跑起来 → Java Web 接收和返回纸条 → Spring 大管家组织员工 → Controller、Service、Mapper 分层办事 → MySQL 大仓库存重要资料 → Redis 小本子加速常用数据 → MQ、异步和定时任务处理慢事情 → 微服务把大店拆成部门 → 部署运维让它真正营业 → 工程工具支持多人协作 → 安全权限守住门禁和资料。
+        </p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="/learn/java" class="inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 dark:bg-white dark:text-slate-950">继续学 Java 基础 →</a>
+          <a href="/learn/java/basic/practice" class="inline-flex rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 dark:border-slate-700 dark:text-slate-200">去做表达练习 →</a>
+        </div>
+      </section>
+    </Reveal>
+  </div>
+</Layout>

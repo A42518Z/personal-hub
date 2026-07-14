@@ -1,0 +1,107 @@
+---
+import type { ToyStoreStage } from '~/data/learn/backend-toy-store';
+
+const { stage } = Astro.props as { stage: ToyStoreStage };
+---
+
+<article id={stage.id} class="scroll-mt-24 overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+  <div class="grid gap-0 lg:grid-cols-[1.05fr_0.95fr]">
+    <div class="p-6 sm:p-8">
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="inline-flex size-11 items-center justify-center rounded-full bg-cyan-100 text-lg font-black text-cyan-700 dark:bg-cyan-500/10 dark:text-cyan-300">{stage.order}</span>
+        <span class="rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">{stage.techTitle}</span>
+      </div>
+      <h2 class="mt-5 text-2xl font-black tracking-tight text-slate-950 dark:text-white sm:text-3xl">{stage.title}</h2>
+      <p class="mt-4 text-base leading-8 text-slate-700 dark:text-slate-300">{stage.oneLine}</p>
+      <p class="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">{stage.story}</p>
+
+      <div class="mt-6 rounded-2xl border border-cyan-100 bg-cyan-50 p-5 dark:border-cyan-500/20 dark:bg-cyan-500/10">
+        <h3 class="text-sm font-semibold text-cyan-800 dark:text-cyan-200">关系一句话</h3>
+        <p class="mt-2 text-sm leading-7 text-slate-700 dark:text-slate-300">{stage.relationship}</p>
+      </div>
+    </div>
+
+    <div class="border-t border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-950/40 lg:border-l lg:border-t-0">
+      <p class="mb-3 text-xs font-semibold uppercase tracking-[0.25em] text-slate-500 dark:text-slate-400">关系图</p>
+      <img src={stage.image} alt={`${stage.title}的模块关系图`} loading="lazy" class="h-full min-h-72 w-full rounded-3xl object-contain" />
+    </div>
+  </div>
+
+  {stage.sceneImage && (
+    <div class="border-t border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900 sm:p-8">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-[0.25em] text-amber-600 dark:text-amber-300">Cartoon Scene</p>
+          <h3 class="mt-2 text-xl font-black text-slate-950 dark:text-white">把类比里的角色画出来</h3>
+        </div>
+        <p class="max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-300">先看场景图形成画面感，再回到技术名词，会比直接背定义更容易记住。</p>
+      </div>
+      <img src={stage.sceneImage} alt={`${stage.title}的卡通场景图`} loading="lazy" class="mt-5 w-full rounded-3xl border border-slate-200 bg-slate-50 object-contain dark:border-slate-800 dark:bg-slate-950/40" />
+    </div>
+  )}
+
+  <div class="border-t border-slate-200 p-6 dark:border-slate-800 sm:p-8">
+    {stage.elementCards && stage.elementCards.length > 0 && (
+      <div class="mb-8">
+        <h3 class="text-lg font-bold text-slate-950 dark:text-white">实体场景图鉴</h3>
+        <p class="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">每个类比实体都有一张独立场景图，帮助你先记住角色和物件，再对应到技术名称。</p>
+        <div class="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {stage.elementCards.map((item) => (
+            <figure class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950/60">
+              <img
+                src={item.sceneImage}
+                alt={`${item.title}对应${item.tech}的卡通场景图`}
+                loading="lazy"
+                class="aspect-[16/9] w-full bg-slate-50 object-cover dark:bg-slate-900"
+              />
+              <figcaption class="p-4">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <p class="text-base font-bold text-slate-950 dark:text-white">{item.title}</p>
+                  <span class="rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">{item.tech}</span>
+                </div>
+                <p class="mt-3 text-sm leading-6 text-slate-600 dark:text-slate-300">{item.analogy}</p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <h3 class="text-lg font-bold text-slate-950 dark:text-white">类比映射表</h3>
+    <div class="mt-5 grid gap-3 md:grid-cols-2">
+      {stage.mappings.map((mapping) => (
+        <div class="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/70">
+          <div class="flex flex-wrap items-center gap-2 text-sm font-semibold">
+            <span class="text-amber-700 dark:text-amber-300">{mapping.analogy}</span>
+            <span class="text-slate-400">→</span>
+            <span class="text-violet-700 dark:text-violet-300">{mapping.tech}</span>
+          </div>
+          <p class="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">{mapping.note}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-6 grid gap-4 lg:grid-cols-2">
+      <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-500/20 dark:bg-emerald-500/10">
+        <h3 class="text-sm font-semibold text-emerald-800 dark:text-emerald-200">新手先记住</h3>
+        <p class="mt-2 text-sm leading-7 text-slate-700 dark:text-slate-300">{stage.newbieTakeaway}</p>
+      </div>
+      <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5 dark:border-violet-500/20 dark:bg-violet-500/10">
+        <h3 class="text-sm font-semibold text-violet-800 dark:text-violet-200">讲给自己听</h3>
+        <p class="mt-2 text-sm leading-7 text-slate-700 dark:text-slate-300">{stage.explainPrompt}</p>
+      </div>
+    </div>
+
+    <label class="mt-6 block">
+      <span class="text-sm font-semibold text-slate-950 dark:text-white">用自己的话写一版</span>
+      <textarea
+        class="mt-3 min-h-32 w-full rounded-2xl border border-slate-200 bg-white p-4 text-sm leading-7 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-400 focus:ring-4 focus:ring-cyan-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-cyan-500 dark:focus:ring-cyan-500/10"
+        placeholder="先用类比说：它像什么；再用技术词说：它真正叫什么；最后说清楚：它和前后环节是什么关系。"
+      ></textarea>
+    </label>
+
+    <div class="mt-5 rounded-2xl bg-slate-50 p-5 text-sm leading-7 text-slate-700 dark:bg-slate-800/70 dark:text-slate-300">
+      下一站：{stage.nextStep}
+    </div>
+  </div>
+</article>

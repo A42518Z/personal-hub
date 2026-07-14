@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">网上玩具店：经典后端分层</title>
+  <desc id="desc">卡通风格图示，Controller 前台，Service 办事员，Mapper 仓库管理员，数据库大仓库。</desc>
+  <rect width="960" height="540" rx="36" fill="#F8FAFC"/>
+  <rect x="70" y="86" width="820" height="368" rx="36" fill="#FFFFFF" stroke="#64748B" stroke-width="6"/>
+
+  <rect x="116" y="154" width="150" height="210" rx="28" fill="#DBEAFE" stroke="#3B82F6" stroke-width="5"/>
+  <text x="191" y="195" text-anchor="middle" font-size="25" font-weight="900" fill="#1D4ED8">Controller</text>
+  <text x="191" y="225" text-anchor="middle" font-size="21" fill="#1D4ED8">前台接待</text>
+  <circle cx="191" cy="282" r="30" fill="#FDE68A" stroke="#92400E" stroke-width="4"/>
+  <rect x="161" y="310" width="60" height="52" rx="16" fill="#60A5FA"/>
+
+  <rect x="316" y="154" width="150" height="210" rx="28" fill="#DCFCE7" stroke="#22C55E" stroke-width="5"/>
+  <text x="391" y="195" text-anchor="middle" font-size="25" font-weight="900" fill="#166534">Service</text>
+  <text x="391" y="225" text-anchor="middle" font-size="21" fill="#166534">真正办事</text>
+  <circle cx="391" cy="282" r="30" fill="#FBCFE8" stroke="#9D174D" stroke-width="4"/>
+  <rect x="361" y="310" width="60" height="52" rx="16" fill="#34D399"/>
+
+  <rect x="516" y="154" width="150" height="210" rx="28" fill="#FEF3C7" stroke="#F59E0B" stroke-width="5"/>
+  <text x="591" y="195" text-anchor="middle" font-size="25" font-weight="900" fill="#92400E">Mapper</text>
+  <text x="591" y="225" text-anchor="middle" font-size="21" fill="#92400E">仓库管理员</text>
+  <circle cx="591" cy="282" r="30" fill="#FED7AA" stroke="#C2410C" stroke-width="4"/>
+  <rect x="561" y="310" width="60" height="52" rx="16" fill="#FBBF24"/>
+
+  <rect x="716" y="154" width="150" height="210" rx="28" fill="#F1F5F9" stroke="#475569" stroke-width="5"/>
+  <text x="791" y="195" text-anchor="middle" font-size="25" font-weight="900" fill="#334155">数据库</text>
+  <text x="791" y="225" text-anchor="middle" font-size="21" fill="#334155">大仓库</text>
+  <rect x="750" y="270" width="82" height="68" rx="14" fill="#CBD5E1" stroke="#475569" stroke-width="4"/>
+  <path d="M750 292 H832 M750 315 H832" stroke="#475569" stroke-width="4"/>
+
+  <path d="M268 260 H314" stroke="#0F172A" stroke-width="7" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M468 260 H514" stroke="#0F172A" stroke-width="7" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M668 260 H714" stroke="#0F172A" stroke-width="7" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <rect x="232" y="394" width="496" height="46" rx="16" fill="#F8FAFC" stroke="#94A3B8" stroke-width="3"/>
+  <text x="480" y="424" text-anchor="middle" font-size="22" font-weight="800" fill="#334155">Controller 接待，Service 办事，Mapper 查仓库</text>
+
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="#0F172A"/></marker></defs>
+</svg>

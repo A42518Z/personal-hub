@@ -1,0 +1,114 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HubHero from '~/components/hub/HubHero.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import { javaBasicLessons } from '~/data/learn/java-basic';
+import { javaBasicLearningStages } from '~/data/learn/java-basic-path';
+
+const metadata = {
+  title: 'Java 基础学习路径',
+  description: 'Java 基础由浅入深路线：基础概念、运行模型、基本语法、数据类型、包装类型、变量常量和方法。',
+};
+
+const stagedLessons = javaBasicLearningStages.map((stage) => ({
+  stage,
+  lesson: javaBasicLessons.find((lesson) => lesson.id === stage.lessonId),
+}));
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-5xl space-y-12 px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <HubHero
+        eyebrow="Java Basic"
+        title="Java 基础由浅入深。"
+        description="这不是零散知识点清单，而是一条学习路径：先知道 Java 是什么，再知道程序怎么跑，最后逐步掌握语法、类型、变量和方法。"
+      />
+    </Reveal>
+
+    <Reveal delay={80}>
+      <section class="rounded-[2rem] border border-slate-200 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
+        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-600 dark:text-cyan-300">How to Learn</p>
+        <h2 class="mt-3 text-2xl font-bold text-slate-950 dark:text-white">每一阶段只解决一个问题。</h2>
+        <div class="mt-6 grid gap-4 text-sm leading-7 text-slate-700 dark:text-slate-300 sm:grid-cols-2">
+          <div class="rounded-2xl bg-slate-50 p-5 dark:bg-slate-800/70">先问：这个阶段我要理解什么？</div>
+          <div class="rounded-2xl bg-slate-50 p-5 dark:bg-slate-800/70">再说：我能不能用自己的话解释？</div>
+          <div class="rounded-2xl bg-slate-50 p-5 dark:bg-slate-800/70">然后练：用题目暴露我没讲清楚的地方。</div>
+          <div class="rounded-2xl bg-slate-50 p-5 dark:bg-slate-800/70">最后复盘：看自检清单，不急着背参考答案。</div>
+        </div>
+      </section>
+    </Reveal>
+
+    <Reveal delay={100}>
+      <section class="rounded-[2rem] border border-cyan-200 bg-cyan-50 p-8 dark:border-cyan-500/30 dark:bg-cyan-500/10">
+        <h2 class="text-2xl font-bold text-slate-950 dark:text-white">7 阶段路线</h2>
+        <div class="mt-8 space-y-4">
+          {javaBasicLearningStages.map((stage) => (
+            <a href={`#${stage.lessonId}`} class="group grid gap-4 rounded-3xl border border-white/70 bg-white/70 p-5 transition hover:-translate-y-1 hover:bg-white dark:border-slate-800 dark:bg-slate-950/60 dark:hover:bg-slate-950 sm:grid-cols-[auto_1fr]">
+              <span class="inline-flex size-10 items-center justify-center rounded-full bg-cyan-100 text-base font-bold text-cyan-700 dark:bg-cyan-500/10 dark:text-cyan-300">{stage.order}</span>
+              <div>
+                <div class="flex flex-wrap items-center gap-3">
+                  <h3 class="text-lg font-semibold text-slate-950 dark:text-white">{stage.title}</h3>
+                  <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{stage.depth}</span>
+                </div>
+                <p class="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{stage.objective}</p>
+                <p class="mt-2 text-xs leading-6 text-cyan-700 dark:text-cyan-300">检查点：{stage.checkpoint}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    </Reveal>
+
+    <div class="space-y-8">
+      {stagedLessons.map(({ stage, lesson }, index) => lesson && (
+        <Reveal delay={120 + index * 40}>
+          <section id={lesson.id} class="scroll-mt-24 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <div class="flex flex-wrap items-center gap-3">
+              <span class="inline-flex size-9 items-center justify-center rounded-full bg-violet-100 text-sm font-bold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">{stage.order}</span>
+              <span class="rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">{lesson.badge}</span>
+              <span class="text-sm text-slate-500 dark:text-slate-400">{stage.subtitle}</span>
+            </div>
+            <h2 class="mt-4 text-2xl font-bold text-slate-950 dark:text-white">{lesson.title}</h2>
+            <p class="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">{lesson.description}</p>
+
+            <div class="mt-6 rounded-2xl border border-cyan-100 bg-cyan-50 p-5 dark:border-cyan-500/20 dark:bg-cyan-500/10">
+              <h3 class="text-sm font-semibold text-cyan-800 dark:text-cyan-200">本阶段目标</h3>
+              <p class="mt-2 text-sm leading-7 text-slate-700 dark:text-slate-300">{stage.objective}</p>
+              <p class="mt-2 text-sm leading-7 text-cyan-700 dark:text-cyan-300">通过标准：{stage.checkpoint}</p>
+            </div>
+
+            <div class="mt-6 grid gap-3">
+              {lesson.points.map((point) => (
+                <div class="rounded-2xl bg-slate-50 px-5 py-4 text-sm leading-7 text-slate-700 dark:bg-slate-800/70 dark:text-slate-300">{point}</div>
+              ))}
+            </div>
+
+            {lesson.missingFromFirstVersion && (
+              <div class="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-500/20 dark:bg-amber-500/10">
+                <h3 class="text-sm font-semibold text-amber-800 dark:text-amber-200">本阶段补齐内容</h3>
+                <ul class="mt-3 grid gap-2 text-sm leading-7 text-slate-700 dark:text-slate-300 sm:grid-cols-2">
+                  {lesson.missingFromFirstVersion.map((item) => <li class="flex gap-2"><span class="text-amber-500">+</span><span>{item}</span></li>)}
+                </ul>
+              </div>
+            )}
+
+            <div class="mt-6 rounded-2xl bg-slate-50 p-5 text-sm leading-7 text-slate-700 dark:bg-slate-800/70 dark:text-slate-300">
+              下一步：{stage.nextHint}
+            </div>
+          </section>
+        </Reveal>
+      ))}
+    </div>
+
+    <Reveal delay={320}>
+      <div class="flex flex-col gap-4 rounded-[2rem] border border-cyan-200 bg-cyan-50 p-8 dark:border-cyan-500/30 dark:bg-cyan-500/10 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-950 dark:text-white">按阶段进入表达型练习。</h2>
+          <p class="mt-3 text-sm leading-7 text-slate-700 dark:text-slate-300">每一组练习只服务当前阶段的目标，避免知识点混在一起造成负担。</p>
+        </div>
+        <a href="/learn/java/basic/practice" class="inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 dark:bg-white dark:text-slate-950">去阶段练习 →</a>
+      </div>
+    </Reveal>
+  </div>
+</Layout>

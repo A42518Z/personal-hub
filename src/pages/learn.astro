@@ -1,0 +1,69 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HubHero from '~/components/hub/HubHero.astro';
+import ItemGrid from '~/components/hub/ItemGrid.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import type { HubItem } from '~/data/hub';
+
+const metadata = {
+  title: '学习训练',
+  description: 'Personal Hub 的知识卡、类比图、练习题、面试复述和错题复盘入口。',
+};
+
+const learningItems: HubItem[] = [
+  {
+    title: '网上玩具店后端路线',
+    description: '用一家网上玩具店的卡通类比，串起网络、Java、JDK/JVM、Java Web、Spring 和分层架构。',
+    href: '/learn/backend',
+    badge: 'Analogy',
+    status: 'online',
+  },
+  {
+    title: 'Java 基础训练',
+    description: '在玩具店主线下继续深入 Java 语言基础、代码输出题和表达型练习。',
+    href: '/learn/java',
+    badge: 'Java',
+    status: 'online',
+  },
+  {
+    title: '前端基础训练',
+    description: 'HTML、CSS、JavaScript、浏览器和工程化基础题库。',
+    href: '/learn#frontend',
+    badge: 'Frontend',
+    status: 'planned',
+  },
+  {
+    title: '算法刷题',
+    description: '后续沉淀数组、字符串、哈希、双指针和动态规划练习。',
+    href: '/learn#algorithm',
+    badge: 'Algorithm',
+    status: 'planned',
+  },
+];
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <HubHero
+        eyebrow="Learning"
+        title="先用类比看懂关系，再进入练习。"
+        description="这里不做文章搬运，也不直接灌答案，而是把学习资料重组为类比图、知识卡、表达练习和复述路线，方便新手快速建立脑内地图。"
+      />
+    </Reveal>
+
+    <Reveal delay={80}>
+      <ItemGrid items={learningItems} />
+    </Reveal>
+
+    <Reveal delay={140}>
+      <section class="rounded-[2rem] border border-slate-200 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
+        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-600 dark:text-cyan-300">Roadmap</p>
+        <h2 class="mt-3 text-2xl font-bold text-slate-950 dark:text-white">第一步先看“网上玩具店”总图。</h2>
+        <p class="mt-4 max-w-3xl text-sm leading-7 text-slate-600 dark:text-slate-300">
+          新手先不急着背 Java 定义。先用玩具店类比理解：浏览器请求怎么找到后端、Java 员工怎么工作、JVM 为什么存在、Spring 为什么像大管家、Controller / Service / Mapper 为什么要分层。
+        </p>
+      </section>
+    </Reveal>
+  </div>
+</Layout>

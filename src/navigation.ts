@@ -36,6 +36,10 @@ export const headerData = {
       text: '更多',
       links: [
         {
+          text: '学习训练',
+          href: getPermalink('/learn'),
+        },
+        {
           text: '前端实验室',
           href: getPermalink('/lab'),
         },
@@ -66,6 +70,7 @@ export const footerData = {
         { text: '博客', href: getBlogPermalink() },
         { text: '导航', href: getPermalink('/bookmarks') },
         { text: '项目', href: getPermalink('/projects') },
+        { text: '学习训练', href: getPermalink('/learn') },
       ],
     },
     {

@@ -1,0 +1,82 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HubHero from '~/components/hub/HubHero.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import LessonCard from '~/components/learn/LessonCard.astro';
+import { javaBasicLessons } from '~/data/learn/java-basic';
+import { javaBasicLearningStages } from '~/data/learn/java-basic-path';
+
+const metadata = {
+  title: 'Java 学习训练',
+  description: 'Java 基础由浅入深学习路径、知识卡和表达型练习入口。',
+};
+
+const stagedLessons = javaBasicLearningStages.map((stage) => ({
+  stage,
+  lesson: javaBasicLessons.find((lesson) => lesson.id === stage.lessonId),
+}));
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-7xl space-y-12 px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <HubHero
+        eyebrow="Java Practice"
+        title="按一条路线，把 Java 基础讲明白。"
+        description="先认识 Java，再理解运行模型，然后进入语法、类型、变量和方法。每一阶段都要求你能用自己的话说出来，而不是零散背知识点。"
+      />
+    </Reveal>
+
+    <Reveal delay={60}>
+      <section class="rounded-[2rem] border border-amber-200 bg-amber-50 p-8 dark:border-amber-500/30 dark:bg-amber-500/10">
+        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-amber-700 dark:text-amber-300">Analogy First</p>
+        <h2 class="mt-3 text-2xl font-bold text-slate-950 dark:text-white">新手建议先看“网上玩具店”总图。</h2>
+        <p class="mt-4 max-w-3xl text-sm leading-7 text-slate-700 dark:text-slate-300">
+          Java 基础只是后端玩具店里的“员工工作语言”。先看总图，你会更容易理解 Java、JDK/JVM、Java Web、Spring 和分层架构之间为什么是连续关系。
+        </p>
+        <a href="/learn/backend" class="mt-6 inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 dark:bg-white dark:text-slate-950">先看玩具店类比 →</a>
+      </section>
+    </Reveal>
+
+    <Reveal delay={80}>
+      <section class="rounded-[2rem] border border-slate-200 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
+        <p class="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-600 dark:text-cyan-300">Learning Path</p>
+        <h2 class="mt-3 text-2xl font-bold text-slate-950 dark:text-white">推荐顺序：从“是什么”到“怎么表达”。</h2>
+        <div class="mt-8 grid gap-4 lg:grid-cols-7">
+          {javaBasicLearningStages.map((stage) => (
+            <a href={`/learn/java/basic#${stage.lessonId}`} class="rounded-3xl border border-slate-200 bg-slate-50 p-4 transition hover:-translate-y-1 hover:border-cyan-300 hover:bg-white dark:border-slate-800 dark:bg-slate-950 dark:hover:border-cyan-500/60">
+              <span class="inline-flex size-8 items-center justify-center rounded-full bg-cyan-100 text-sm font-bold text-cyan-700 dark:bg-cyan-500/10 dark:text-cyan-300">{stage.order}</span>
+              <p class="mt-4 text-sm font-semibold text-slate-950 dark:text-white">{stage.title}</p>
+              <p class="mt-2 text-xs leading-5 text-slate-500 dark:text-slate-400">{stage.depth}</p>
+            </a>
+          ))}
+        </div>
+      </section>
+    </Reveal>
+
+    <div class="grid gap-5 lg:grid-cols-2">
+      {stagedLessons.map(({ stage, lesson }, index) => lesson && (
+        <Reveal delay={100 + index * 30}>
+          <div class="space-y-3">
+            <div class="flex items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+              <span class="inline-flex size-7 items-center justify-center rounded-full bg-violet-100 font-bold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">{stage.order}</span>
+              <span>{stage.subtitle}</span>
+            </div>
+            <LessonCard lesson={lesson} />
+          </div>
+        </Reveal>
+      ))}
+    </div>
+
+    <Reveal delay={180}>
+      <div class="flex flex-col gap-4 rounded-[2rem] border border-cyan-200 bg-cyan-50 p-8 dark:border-cyan-500/30 dark:bg-cyan-500/10 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-700 dark:text-cyan-300">Practice</p>
+          <h2 class="mt-2 text-2xl font-bold text-slate-950 dark:text-white">练习也按阶段推进。</h2>
+          <p class="mt-3 text-sm leading-7 text-slate-700 dark:text-slate-300">先完成前一阶段的自我表达，再进入下一阶段。这样你学到的是一条理解链，而不是碎片答案。</p>
+        </div>
+        <a href="/learn/java/basic/practice" class="inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 dark:bg-white dark:text-slate-950">进入阶段练习 →</a>
+      </div>
+    </Reveal>
+  </div>
+</Layout>

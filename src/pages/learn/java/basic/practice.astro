@@ -1,0 +1,100 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import HubHero from '~/components/hub/HubHero.astro';
+import Reveal from '~/components/effects/Reveal.astro';
+import PracticeCard from '~/components/learn/PracticeCard.astro';
+import { javaBasicQuestions } from '~/data/learn/java-basic';
+import { javaBasicLearningStages } from '~/data/learn/java-basic-path';
+
+const metadata = {
+  title: 'Java 基础阶段练习',
+  description: 'Java 基础由浅入深表达练习：按阶段完成自我解释、代码推导、对比说明和场景表达。',
+};
+
+const stagedQuestionGroups = javaBasicLearningStages
+  .map((stage) => ({
+    stage,
+    questions: javaBasicQuestions.filter((question) => question.chapter === stage.chapter),
+  }))
+  .filter((group) => group.questions.length > 0);
+
+const questionTypes = Array.from(new Set(javaBasicQuestions.map((question) => question.type))).length;
+---
+
+<Layout metadata={metadata}>
+  <div class="mx-auto max-w-5xl space-y-10 px-4 py-10 sm:px-6 lg:px-8">
+    <Reveal>
+      <HubHero
+        eyebrow="Stage Practice"
+        title="按阶段练，不跳着背。"
+        description="每一阶段先给目标和通过标准，再进入题目。你只需要把当前阶段讲清楚，再进入下一阶段。"
+      />
+    </Reveal>
+
+    <Reveal delay={80}>
+      <div class="rounded-[2rem] border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+        <div class="grid gap-4 sm:grid-cols-3">
+          <div>
+            <p class="text-3xl font-bold text-slate-950 dark:text-white">{javaBasicQuestions.length}</p>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">表达练习</p>
+          </div>
+          <div>
+            <p class="text-3xl font-bold text-slate-950 dark:text-white">{questionTypes}</p>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">练习类型</p>
+          </div>
+          <div>
+            <p class="text-3xl font-bold text-slate-950 dark:text-white">{stagedQuestionGroups.length}</p>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">学习阶段</p>
+          </div>
+        </div>
+        <div class="mt-6 rounded-2xl bg-cyan-50 p-5 text-sm leading-7 text-slate-700 dark:bg-cyan-500/10 dark:text-slate-300">
+          <strong class="text-slate-950 dark:text-white">使用方法：</strong>按阶段往下做。每阶段先看“目标”和“通过标准”，再完成题目。不要急着展开参考表达，先把自己的理解写出来。
+        </div>
+      </div>
+    </Reveal>
+
+    <div class="space-y-10">
+      {stagedQuestionGroups.map(({ stage, questions }, groupIndex) => (
+        <Reveal delay={100 + groupIndex * 40}>
+          <section id={stage.id} class="scroll-mt-24 space-y-5 rounded-[2rem] border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-950/40 sm:p-6">
+            <div class="rounded-3xl border border-white bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+              <div class="flex flex-wrap items-center gap-3">
+                <span class="inline-flex size-10 items-center justify-center rounded-full bg-cyan-100 text-base font-bold text-cyan-700 dark:bg-cyan-500/10 dark:text-cyan-300">{stage.order}</span>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">{stage.depth}</span>
+              </div>
+              <h2 class="mt-4 text-2xl font-bold text-slate-950 dark:text-white">{stage.title}</h2>
+              <p class="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">{stage.subtitle}</p>
+              <div class="mt-5 grid gap-3 text-sm leading-7 text-slate-700 dark:text-slate-300 sm:grid-cols-2">
+                <div class="rounded-2xl bg-cyan-50 p-4 dark:bg-cyan-500/10">
+                  <strong class="text-slate-950 dark:text-white">本阶段目标：</strong>{stage.objective}
+                </div>
+                <div class="rounded-2xl bg-violet-50 p-4 dark:bg-violet-500/10">
+                  <strong class="text-slate-950 dark:text-white">通过标准：</strong>{stage.checkpoint}
+                </div>
+              </div>
+            </div>
+
+            {questions.map((question, index) => (
+              <PracticeCard question={question} index={index} />
+            ))}
+          </section>
+        </Reveal>
+      ))}
+    </div>
+
+    <Reveal delay={280}>
+      <div class="rounded-[2rem] border border-slate-200 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
+        <h2 class="text-2xl font-bold text-slate-950 dark:text-white">完成后的综合复述</h2>
+        <p class="mt-4 text-sm leading-7 text-slate-700 dark:text-slate-300">
+          试着用 3 分钟讲完整条链路：Java 是什么 → 程序怎么运行 → 基本语法怎么读 → 数据类型怎么选 → 包装类型有哪些坑 → 变量在哪里、活多久 → 方法如何组织行为。
+        </p>
+        <ul class="mt-5 grid gap-3 text-sm leading-7 text-slate-700 dark:text-slate-300 sm:grid-cols-2">
+          <li class="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/70">本地保存每阶段复述答案</li>
+          <li class="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/70">按阶段统计掌握度</li>
+          <li class="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/70">完成当前阶段后解锁下一阶段</li>
+          <li class="rounded-2xl bg-slate-50 p-4 dark:bg-slate-800/70">3 分钟面试口述计时模式</li>
+        </ul>
+      </div>
+    </Reveal>
+  </div>
+</Layout>
