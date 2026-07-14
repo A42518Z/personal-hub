@@ -35,7 +35,9 @@ const docs = sourceDocs.filter(({ markdown }) => {
   return true;
 });
 
-const questionTitles = extractQuestionTitles(docs.map(({ markdown }) => markdown.rawContent()));
+const questionTitles = extractQuestionTitles(
+  docs.filter(({ id }) => id !== 'overview').map(({ markdown }) => markdown.rawContent())
+);
 const answerResult = await loadMemorizationAnswers(questionTitles);
 const answerPayload = Object.fromEntries(
   answerResult.answers.map(({ title, html, sourcePath }) => [title, { html, sourcePath }])
@@ -110,7 +112,7 @@ const answerJson = JSON.stringify(answerPayload).replace(/</g, '\\u003c');
               </div>
               <a href="#top" class="text-xs font-semibold text-slate-400 transition hover:text-emerald-600 dark:hover:text-emerald-300">返回顶部 ↑</a>
             </div>
-            <article class="memorize-markdown prose prose-slate max-w-none px-5 py-7 dark:prose-invert sm:px-8 sm:py-10 lg:px-12" data-question-container>
+            <article class="memorize-markdown prose prose-slate max-w-none px-5 py-7 dark:prose-invert sm:px-8 sm:py-10 lg:px-12" data-question-container={doc.id !== 'overview' ? '' : undefined}>
               <doc.markdown.Content />
             </article>
             {index < docs.length - 1 && (

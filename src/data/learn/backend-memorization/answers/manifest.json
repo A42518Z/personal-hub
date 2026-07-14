@@ -1,0 +1,532 @@
+{
+  "source": "../absidianValues/面试题",
+  "questionCount": 87,
+  "answerCount": 87,
+  "answers": [
+    {
+      "title": "==和equals()的区别",
+      "file": "==和equals()的区别.md",
+      "sourcePath": "01_Java基础/==和equals()的区别.md"
+    },
+    {
+      "title": "反射的优缺点",
+      "file": "反射的优缺点.md",
+      "sourcePath": "01_Java基础/反射的优缺点.md"
+    },
+    {
+      "title": "浮点型为什么不能用来表示金额",
+      "file": "浮点型为什么不能用来表示金额.md",
+      "sourcePath": "01_Java基础/浮点型为什么不能用来表示金额.md"
+    },
+    {
+      "title": "介绍一下SPI",
+      "file": "介绍一下SPI.md",
+      "sourcePath": "01_Java基础/介绍一下SPI.md"
+    },
+    {
+      "title": "快速排序",
+      "file": "快速排序.md",
+      "sourcePath": "01_Java基础/快速排序.md"
+    },
+    {
+      "title": "普通类和抽象类的区别",
+      "file": "普通类和抽象类的区别.md",
+      "sourcePath": "01_Java基础/普通类和抽象类的区别.md"
+    },
+    {
+      "title": "深拷贝和浅拷贝",
+      "file": "深拷贝和浅拷贝.md",
+      "sourcePath": "01_Java基础/深拷贝和浅拷贝.md"
+    },
+    {
+      "title": "什么是面向对象",
+      "file": "什么是面向对象.md",
+      "sourcePath": "01_Java基础/什么是面向对象.md"
+    },
+    {
+      "title": "为什么重写equals()就一定要重写hashCode()方法",
+      "file": "为什么重写equals()就一定要重写hashCode()方法.md",
+      "sourcePath": "01_Java基础/为什么重写equals()就一定要重写hashCode()方法.md"
+    },
+    {
+      "title": "重写equals()方法后为什么要重写hashCode()方法",
+      "file": "重写equals()方法后为什么要重写hashCode()方法.md",
+      "sourcePath": "01_Java基础/重写equals()方法后为什么要重写hashCode()方法.md"
+    },
+    {
+      "title": "Array.sort排序",
+      "file": "Array.sort排序.md",
+      "sourcePath": "01_Java基础/Array.sort排序.md"
+    },
+    {
+      "title": "final关键字的作用",
+      "file": "final关键字的作用.md",
+      "sourcePath": "01_Java基础/final关键字的作用.md"
+    },
+    {
+      "title": "finally块一定会被执行吗",
+      "file": "finally块一定会被执行吗.md",
+      "sourcePath": "01_Java基础/finally块一定会被执行吗.md"
+    },
+    {
+      "title": "Integer和int的区别",
+      "file": "Integer和int的区别.md",
+      "sourcePath": "01_Java基础/Integer和int的区别.md"
+    },
+    {
+      "title": "String,StringBuilder,StringBuffer的区别",
+      "file": "String,StringBuilder,StringBuffer的区别.md",
+      "sourcePath": "01_Java基础/String,StringBuilder,StringBuffer的区别.md"
+    },
+    {
+      "title": "ArrarList和LinkedList的区别",
+      "file": "ArrarList和LinkedList的区别.md",
+      "sourcePath": "02_集合框架/ArrarList和LinkedList的区别.md"
+    },
+    {
+      "title": "ConcurrentHashMap和HashMap的区别",
+      "file": "ConcurrentHashMap和HashMap的区别.md",
+      "sourcePath": "02_集合框架/ConcurrentHashMap和HashMap的区别.md"
+    },
+    {
+      "title": "ConcurrentHashMap如何保证线程安全的",
+      "file": "ConcurrentHashMap如何保证线程安全的.md",
+      "sourcePath": "02_集合框架/ConcurrentHashMap如何保证线程安全的.md"
+    },
+    {
+      "title": "HashMap和HashSet有什么区别",
+      "file": "HashMap和HashSet有什么区别.md",
+      "sourcePath": "02_集合框架/HashMap和HashSet有什么区别.md"
+    },
+    {
+      "title": "HashMap和HashTable的区别",
+      "file": "HashMap和HashTable的区别.md",
+      "sourcePath": "02_集合框架/HashMap和HashTable的区别.md"
+    },
+    {
+      "title": "LinkedHashMap",
+      "file": "LinkedHashMap.md",
+      "sourcePath": "02_集合框架/LinkedHashMap.md"
+    },
+    {
+      "title": "悲观锁和乐观锁的区别",
+      "file": "悲观锁和乐观锁的区别.md",
+      "sourcePath": "03_并发编程/悲观锁和乐观锁的区别.md"
+    },
+    {
+      "title": "进程和线程的区别",
+      "file": "进程和线程的区别.md",
+      "sourcePath": "03_并发编程/进程和线程的区别.md"
+    },
+    {
+      "title": "什么是可重入锁",
+      "file": "什么是可重入锁.md",
+      "sourcePath": "03_并发编程/什么是可重入锁.md"
+    },
+    {
+      "title": "什么是守护线程",
+      "file": "什么是守护线程.md",
+      "sourcePath": "03_并发编程/什么是守护线程.md"
+    },
+    {
+      "title": "谈谈你对AQS的理解",
+      "file": "谈谈你对AQS的理解.md",
+      "sourcePath": "03_并发编程/谈谈你对AQS的理解.md"
+    },
+    {
+      "title": "线程池的核心参数",
+      "file": "线程池的核心参数.md",
+      "sourcePath": "03_并发编程/线程池的核心参数.md"
+    },
+    {
+      "title": "线程池的拒绝策略",
+      "file": "线程池的拒绝策略.md",
+      "sourcePath": "03_并发编程/线程池的拒绝策略.md"
+    },
+    {
+      "title": "线程池底层的工作原理",
+      "file": "线程池底层的工作原理.md",
+      "sourcePath": "03_并发编程/线程池底层的工作原理.md"
+    },
+    {
+      "title": "线程池有哪几种状态",
+      "file": "线程池有哪几种状态.md",
+      "sourcePath": "03_并发编程/线程池有哪几种状态.md"
+    },
+    {
+      "title": "线程创建：继承Thread类和实现Runnable接口",
+      "file": "线程创建：继承Thread类和实现Runnable接口.md",
+      "sourcePath": "03_并发编程/线程创建：继承Thread类和实现Runnable接口.md"
+    },
+    {
+      "title": "线程的6种状态",
+      "file": "线程的6种状态.md",
+      "sourcePath": "03_并发编程/线程的6种状态.md"
+    },
+    {
+      "title": "线程的run()和start()有什么区别",
+      "file": "线程的run()和start()有什么区别.md",
+      "sourcePath": "03_并发编程/线程的run()和start()有什么区别.md"
+    },
+    {
+      "title": "一个线程调用两次start方法会有问题吗",
+      "file": "一个线程调用两次start方法会有问题吗.md",
+      "sourcePath": "03_并发编程/一个线程调用两次start方法会有问题吗.md"
+    },
+    {
+      "title": "CAS操作",
+      "file": "CAS操作.md",
+      "sourcePath": "03_并发编程/CAS操作.md"
+    },
+    {
+      "title": "CAS中的ABA问题如何解决",
+      "file": "CAS中的ABA问题如何解决.md",
+      "sourcePath": "03_并发编程/CAS中的ABA问题如何解决.md"
+    },
+    {
+      "title": "synchronized和volatile的区别",
+      "file": "synchronized和volatile的区别.md",
+      "sourcePath": "03_并发编程/synchronized和volatile的区别.md"
+    },
+    {
+      "title": "ThreadLocal介绍",
+      "file": "ThreadLocal介绍.md",
+      "sourcePath": "03_并发编程/ThreadLocal介绍.md"
+    },
+    {
+      "title": "execute和submit的区别",
+      "file": "execute和submit的区别.md",
+      "sourcePath": "03_并发编程/execute和submit的区别.md"
+    },
+    {
+      "title": "介绍类加载过程，什么是双亲委派",
+      "file": "介绍类加载过程，什么是双亲委派.md",
+      "sourcePath": "04_JVM/介绍类加载过程，什么是双亲委派.md"
+    },
+    {
+      "title": "什么是Java内存模型(JMM)",
+      "file": "什么是Java内存模型(JMM).md",
+      "sourcePath": "04_JVM/什么是Java内存模型(JMM).md"
+    },
+    {
+      "title": "双亲委派机制",
+      "file": "双亲委派机制.md",
+      "sourcePath": "04_JVM/双亲委派机制.md"
+    },
+    {
+      "title": "JDK,JRE,JVM的区别",
+      "file": "JDK,JRE,JVM的区别.md",
+      "sourcePath": "04_JVM/JDK,JRE,JVM的区别.md"
+    },
+    {
+      "title": "JDK动态代理为什么只能代理有接口的类",
+      "file": "JDK动态代理为什么只能代理有接口的类.md",
+      "sourcePath": "04_JVM/JDK动态代理为什么只能代理有接口的类.md"
+    },
+    {
+      "title": "JVM的四种垃圾回收算法",
+      "file": "JVM的四种垃圾回收算法.md",
+      "sourcePath": "04_JVM/JVM的四种垃圾回收算法.md"
+    },
+    {
+      "title": "@Resource和@Autowired",
+      "file": "@Resource和@Autowired.md",
+      "sourcePath": "05_Spring生态/@Resource和@Autowired.md"
+    },
+    {
+      "title": "过滤器和拦截器的区别",
+      "file": "过滤器和拦截器的区别.md",
+      "sourcePath": "05_Spring生态/过滤器和拦截器的区别.md"
+    },
+    {
+      "title": "介绍下SpringIOC的工作流程",
+      "file": "介绍下SpringIOC的工作流程.md",
+      "sourcePath": "05_Spring生态/介绍下SpringIOC的工作流程.md"
+    },
+    {
+      "title": "谈谈对SpringMVC的理解",
+      "file": "谈谈对SpringMVC的理解.md",
+      "sourcePath": "05_Spring生态/谈谈对SpringMVC的理解.md"
+    },
+    {
+      "title": "为什么有些公司禁止使用@Transactional声明式事务",
+      "file": "为什么有些公司禁止使用@Transactional声明式事务.md",
+      "sourcePath": "05_Spring生态/为什么有些公司禁止使用@Transactional声明式事务.md"
+    },
+    {
+      "title": "Spring解决循环依赖问题",
+      "file": "Spring解决循环依赖问题.md",
+      "sourcePath": "05_Spring生态/Spring解决循环依赖问题.md"
+    },
+    {
+      "title": "Spring是如何整合MyBatis将Mapper接口注册为Bean的原理",
+      "file": "Spring是如何整合MyBatis将Mapper接口注册为Bean的原理.md",
+      "sourcePath": "05_Spring生态/Spring是如何整合MyBatis将Mapper接口注册为Bean的原理.md"
+    },
+    {
+      "title": "spring循环依赖",
+      "file": "spring循环依赖.md",
+      "sourcePath": "05_Spring生态/spring循环依赖.md"
+    },
+    {
+      "title": "Spring中Bean的生命周期",
+      "file": "Spring中Bean的生命周期.md",
+      "sourcePath": "05_Spring生态/Spring中Bean的生命周期.md"
+    },
+    {
+      "title": "SpringBoot和传统Spring有什么区别",
+      "file": "SpringBoot和传统Spring有什么区别.md",
+      "sourcePath": "05_Spring生态/SpringBoot和传统Spring有什么区别.md"
+    },
+    {
+      "title": "mybatis的缓存机制",
+      "file": "mybatis的缓存机制.md",
+      "sourcePath": "06_MyBatis/mybatis的缓存机制.md"
+    },
+    {
+      "title": "Mybatis是如何进行分页的",
+      "file": "Mybatis是如何进行分页的.md",
+      "sourcePath": "06_MyBatis/Mybatis是如何进行分页的.md"
+    },
+    {
+      "title": "Mybatis中#{}和${}的区别是什么",
+      "file": "Mybatis中#{}和${}的区别是什么.md",
+      "sourcePath": "06_MyBatis/Mybatis中#{}和${}的区别是什么.md"
+    },
+    {
+      "title": "内连接、左连接、右连接的区别",
+      "file": "内连接、左连接、右连接的区别.md",
+      "sourcePath": "07_MySQL/内连接、左连接、右连接的区别.md"
+    },
+    {
+      "title": "事务的四个特性以及四个隔离级别",
+      "file": "事务的四个特性以及四个隔离级别.md",
+      "sourcePath": "07_MySQL/事务的四个特性以及四个隔离级别.md"
+    },
+    {
+      "title": "为什么数据库字段建议设置位not null",
+      "file": "为什么数据库字段建议设置位not null.md",
+      "sourcePath": "07_MySQL/为什么数据库字段建议设置位not null.md"
+    },
+    {
+      "title": "为什么SQL语句不要使用过多的join",
+      "file": "为什么SQL语句不要使用过多的join.md",
+      "sourcePath": "07_MySQL/为什么SQL语句不要使用过多的join.md"
+    },
+    {
+      "title": "在亿级别的数据库中，快速查询uid的4的数据，其中uid=4的数据有很多",
+      "file": "在亿级别的数据库中，快速查询uid的4的数据，其中uid=4的数据有很多.md",
+      "sourcePath": "07_MySQL/在亿级别的数据库中，快速查询uid的4的数据，其中uid=4的数据有很多.md"
+    },
+    {
+      "title": "B树和B+树的区别",
+      "file": "B树和B+树的区别.md",
+      "sourcePath": "07_MySQL/B树和B+树的区别.md"
+    },
+    {
+      "title": "Mysql的索引",
+      "file": "Mysql的索引.md",
+      "sourcePath": "07_MySQL/Mysql的索引.md"
+    },
+    {
+      "title": "Mysql聚簇索引",
+      "file": "Mysql聚簇索引.md",
+      "sourcePath": "07_MySQL/Mysql聚簇索引.md"
+    },
+    {
+      "title": "Mysql三大范式",
+      "file": "Mysql三大范式.md",
+      "sourcePath": "07_MySQL/Mysql三大范式.md"
+    },
+    {
+      "title": "MYSQL中的MVCC",
+      "file": "MYSQL中的MVCC.md",
+      "sourcePath": "07_MySQL/MYSQL中的MVCC.md"
+    },
+    {
+      "title": "Redis和Mysql如何保证数据一致性",
+      "file": "Redis和Mysql如何保证数据一致性.md",
+      "sourcePath": "08_Redis/Redis和Mysql如何保证数据一致性.md"
+    },
+    {
+      "title": "sql索引失效",
+      "file": "sql索引失效.md",
+      "sourcePath": "07_MySQL/sql索引失效.md"
+    },
+    {
+      "title": "Redis主从复制的原理",
+      "file": "Redis主从复制的原理.md",
+      "sourcePath": "08_Redis/Redis主从复制的原理.md"
+    },
+    {
+      "title": "Zset底层的数据结构",
+      "file": "Zset底层的数据结构.md",
+      "sourcePath": "08_Redis/Zset底层的数据结构.md"
+    },
+    {
+      "title": "三次握手的流程",
+      "file": "三次握手的流程.md",
+      "sourcePath": "09_网络与Web/三次握手的流程.md"
+    },
+    {
+      "title": "同步和异步有什么区别",
+      "file": "同步和异步有什么区别.md",
+      "sourcePath": "09_网络与Web/同步和异步有什么区别.md"
+    },
+    {
+      "title": "BIO,NIO,AIO的区别",
+      "file": "BIO,NIO,AIO的区别.md",
+      "sourcePath": "09_网络与Web/BIO,NIO,AIO的区别.md"
+    },
+    {
+      "title": "Cookie和Session的区别",
+      "file": "Cookie和Session的区别.md",
+      "sourcePath": "09_网络与Web/Cookie和Session的区别.md"
+    },
+    {
+      "title": "HTTP和HTTPS的区别",
+      "file": "HTTP和HTTPS的区别.md",
+      "sourcePath": "09_网络与Web/HTTP和HTTPS的区别.md"
+    },
+    {
+      "title": "JSP九大内置对象",
+      "file": "JSP九大内置对象.md",
+      "sourcePath": "09_网络与Web/JSP九大内置对象.md"
+    },
+    {
+      "title": "jsp怎么防止重复提交",
+      "file": "jsp怎么防止重复提交.md",
+      "sourcePath": "09_网络与Web/jsp怎么防止重复提交.md"
+    },
+    {
+      "title": "对微服务的理解",
+      "file": "对微服务的理解.md",
+      "sourcePath": "10_分布式与架构/对微服务的理解.md"
+    },
+    {
+      "title": "数据量多大的时候要开始分表分库",
+      "file": "数据量多大的时候要开始分表分库.md",
+      "sourcePath": "10_分布式与架构/数据量多大的时候要开始分表分库.md"
+    },
+    {
+      "title": "雪花算法实现",
+      "file": "雪花算法实现.md",
+      "sourcePath": "10_分布式与架构/雪花算法实现.md"
+    },
+    {
+      "title": "Base理论",
+      "file": "Base理论.md",
+      "sourcePath": "10_分布式与架构/Base理论.md"
+    },
+    {
+      "title": "CAP原则",
+      "file": "CAP原则.md",
+      "sourcePath": "10_分布式与架构/CAP原则.md"
+    },
+    {
+      "title": "在DCL单例写法中，为什么主要做两次检查",
+      "file": "在DCL单例写法中，为什么主要做两次检查.md",
+      "sourcePath": "11_算法与场景题/在DCL单例写法中，为什么主要做两次检查.md"
+    },
+    {
+      "title": "linux基本命令",
+      "file": "linux基本命令.md",
+      "sourcePath": "12_Linux与运维/linux基本命令.md"
+    },
+    {
+      "title": "tomcat优化",
+      "file": "tomcat优化.md",
+      "sourcePath": "12_Linux与运维/tomcat优化.md"
+    }
+  ],
+  "missingTitles": [],
+  "duplicateTitles": [
+    "==和equals()的区别",
+    "反射的优缺点",
+    "浮点型为什么不能用来表示金额",
+    "介绍一下SPI",
+    "快速排序",
+    "普通类和抽象类的区别",
+    "深拷贝和浅拷贝",
+    "什么是面向对象",
+    "为什么重写equals()就一定要重写hashCode()方法",
+    "重写equals()方法后为什么要重写hashCode()方法",
+    "Array.sort排序",
+    "final关键字的作用",
+    "finally块一定会被执行吗",
+    "Integer和int的区别",
+    "String,StringBuilder,StringBuffer的区别",
+    "ArrarList和LinkedList的区别",
+    "ConcurrentHashMap和HashMap的区别",
+    "ConcurrentHashMap如何保证线程安全的",
+    "HashMap和HashSet有什么区别",
+    "HashMap和HashTable的区别",
+    "LinkedHashMap",
+    "悲观锁和乐观锁的区别",
+    "进程和线程的区别",
+    "什么是可重入锁",
+    "什么是守护线程",
+    "谈谈你对AQS的理解",
+    "线程池的核心参数",
+    "线程池的拒绝策略",
+    "线程池底层的工作原理",
+    "线程池有哪几种状态",
+    "线程创建：继承Thread类和实现Runnable接口",
+    "线程的6种状态",
+    "线程的run()和start()有什么区别",
+    "一个线程调用两次start方法会有问题吗",
+    "CAS操作",
+    "CAS中的ABA问题如何解决",
+    "synchronized和volatile的区别",
+    "ThreadLocal介绍",
+    "execute和submit的区别",
+    "介绍类加载过程，什么是双亲委派",
+    "什么是Java内存模型(JMM)",
+    "双亲委派机制",
+    "JDK,JRE,JVM的区别",
+    "JDK动态代理为什么只能代理有接口的类",
+    "JVM的四种垃圾回收算法",
+    "@Resource和@Autowired",
+    "过滤器和拦截器的区别",
+    "介绍下SpringIOC的工作流程",
+    "谈谈对SpringMVC的理解",
+    "为什么有些公司禁止使用@Transactional声明式事务",
+    "Spring解决循环依赖问题",
+    "Spring是如何整合MyBatis将Mapper接口注册为Bean的原理",
+    "spring循环依赖",
+    "Spring中Bean的生命周期",
+    "SpringBoot和传统Spring有什么区别",
+    "mybatis的缓存机制",
+    "Mybatis是如何进行分页的",
+    "Mybatis中#{}和${}的区别是什么",
+    "内连接、左连接、右连接的区别",
+    "事务的四个特性以及四个隔离级别",
+    "为什么数据库字段建议设置位not null",
+    "为什么SQL语句不要使用过多的join",
+    "在亿级别的数据库中，快速查询uid的4的数据，其中uid=4的数据有很多",
+    "B树和B+树的区别",
+    "Mysql的索引",
+    "Mysql聚簇索引",
+    "Mysql三大范式",
+    "MYSQL中的MVCC",
+    "Redis和Mysql如何保证数据一致性",
+    "sql索引失效",
+    "Redis主从复制的原理",
+    "Zset底层的数据结构",
+    "三次握手的流程",
+    "同步和异步有什么区别",
+    "BIO,NIO,AIO的区别",
+    "Cookie和Session的区别",
+    "HTTP和HTTPS的区别",
+    "JSP九大内置对象",
+    "jsp怎么防止重复提交",
+    "对微服务的理解",
+    "数据量多大的时候要开始分表分库",
+    "雪花算法实现",
+    "Base理论",
+    "CAP原则",
+    "在DCL单例写法中，为什么主要做两次检查",
+    "linux基本命令",
+    "tomcat优化"
+  ]
+}
