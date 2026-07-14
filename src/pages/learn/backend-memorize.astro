@@ -1,0 +1,271 @@
+---
+import Layout from '~/layouts/PageLayout.astro';
+import * as Overview from '~/data/learn/backend-memorization/overview.md';
+import * as Day1 from '~/data/learn/backend-memorization/day1.md';
+import * as Day2 from '~/data/learn/backend-memorization/day2.md';
+import * as Day3 from '~/data/learn/backend-memorization/day3.md';
+import * as Day4 from '~/data/learn/backend-memorization/day4.md';
+import * as Day5 from '~/data/learn/backend-memorization/day5.md';
+import * as Day6 from '~/data/learn/backend-memorization/day6.md';
+import * as Day7 from '~/data/learn/backend-memorization/day7.md';
+import { extractQuestionTitles, loadMemorizationAnswers } from '~/utils/backendMemorizationAnswers';
+
+const metadata = {
+  title: '后端七天背诵',
+  description: '按照七天背诵计划整理的后端面试复习文档，支持目录跳转、题目点击查看答案与 Markdown 阅读体验。',
+};
+
+const sourceDocs = [
+  { id: 'overview', label: '总计划', title: '七天背诵总计划', markdown: Overview },
+  { id: 'day-1', label: 'Day 1', title: 'Java 基础 + 集合', markdown: Day1 },
+  { id: 'day-2', label: 'Day 2', title: '并发基础 + 锁 + CAS', markdown: Day2 },
+  { id: 'day-3', label: 'Day 3', title: '线程池 + JVM', markdown: Day3 },
+  { id: 'day-4', label: 'Day 4', title: 'Spring 全家桶', markdown: Day4 },
+  { id: 'day-5', label: 'Day 5', title: 'MyBatis + MySQL', markdown: Day5 },
+  { id: 'day-6', label: 'Day 6', title: 'Redis + 网络 + 分布式', markdown: Day6 },
+  { id: 'day-7', label: 'Day 7', title: '算法场景 + 总复盘', markdown: Day7 },
+];
+
+const normalizeMarkdown = (content: string) => content.replace(/\r\n/g, '\n').replace(/\s+/g, ' ').trim();
+const seenContents = new Set<string>();
+const docs = sourceDocs.filter(({ markdown }) => {
+  const fingerprint = normalizeMarkdown(markdown.rawContent());
+  if (seenContents.has(fingerprint)) return false;
+  seenContents.add(fingerprint);
+  return true;
+});
+
+const questionTitles = extractQuestionTitles(docs.map(({ markdown }) => markdown.rawContent()));
+const answerResult = await loadMemorizationAnswers(questionTitles);
+const answerPayload = Object.fromEntries(
+  answerResult.answers.map(({ title, html, sourcePath }) => [title, { html, sourcePath }])
+);
+const answerJson = JSON.stringify(answerPayload).replace(/</g, '\\u003c');
+---
+
+<Layout metadata={metadata}>
+  <div id="top" class="memorize-shell mx-auto max-w-[1520px] px-4 py-8 sm:px-6 lg:px-8">
+    <div class="mb-8 rounded-[1.75rem] border border-slate-200 bg-white/90 p-6 shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-900/90 sm:p-8">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <div class="max-w-3xl">
+          <div class="mb-4 flex flex-wrap items-center gap-2 text-xs font-semibold">
+            <a href="/learn" class="rounded-full bg-slate-100 px-3 py-1.5 text-slate-600 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">学习训练</a>
+            <span class="text-slate-300 dark:text-slate-700">/</span>
+            <span class="rounded-full bg-emerald-50 px-3 py-1.5 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">后端背诵</span>
+          </div>
+          <p class="text-sm font-bold uppercase tracking-[0.22em] text-emerald-600 dark:text-emerald-300">7-Day Backend Recall</p>
+          <h1 class="mt-3 text-3xl font-black tracking-tight text-slate-950 dark:text-white sm:text-5xl">像读 Markdown 一样背诵，点击题目直接看答案。</h1>
+          <p class="mt-4 max-w-2xl text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-base">
+            完整收录七天背诵计划。点击任意蓝绿色题目即可弹出对应答案，答案来自面试题目录下匹配的 Markdown 文档。
+          </p>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-800 dark:bg-slate-950">
+            <p class="text-2xl font-black text-slate-950 dark:text-white">{docs.length}</p>
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">唯一文档</p>
+          </div>
+          <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 dark:border-emerald-500/20 dark:bg-emerald-500/10">
+            <p class="text-2xl font-black text-emerald-700 dark:text-emerald-300">{answerResult.answers.length}</p>
+            <p class="mt-1 text-xs text-emerald-700/70 dark:text-emerald-300/70">可弹出答案</p>
+          </div>
+          <div class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 dark:border-amber-500/20 dark:bg-amber-500/10">
+            <p class="text-2xl font-black text-amber-700 dark:text-amber-300">{answerResult.missingTitles.length}</p>
+            <p class="mt-1 text-xs text-amber-700/70 dark:text-amber-300/70">未匹配题目</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid items-start gap-6 xl:grid-cols-[280px_minmax(0,1fr)]">
+      <aside class="xl:sticky xl:top-24">
+        <nav aria-label="背诵文档目录" class="rounded-[1.5rem] border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div class="flex items-center justify-between px-3 py-3">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">Documents</p>
+              <h2 class="mt-1 text-sm font-black text-slate-950 dark:text-white">背诵目录</h2>
+            </div>
+            <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-bold text-slate-500 dark:bg-slate-800 dark:text-slate-300">{docs.length}</span>
+          </div>
+          <div class="directory-scroll flex gap-2 overflow-x-auto pb-1 xl:block xl:space-y-1 xl:overflow-visible">
+            {docs.map((doc, index) => (
+              <a href={`#${doc.id}`} data-directory-link={doc.id} class="directory-link group flex min-w-[220px] items-center gap-3 rounded-2xl px-3 py-3 text-left transition xl:min-w-0">
+                <span class="flex size-8 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-xs font-black text-slate-500 transition group-hover:bg-emerald-100 group-hover:text-emerald-700 dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-emerald-500/15 dark:group-hover:text-emerald-300">{index === 0 ? '总' : index}</span>
+                <span class="min-w-0">
+                  <span class="block text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">{doc.label}</span>
+                  <span class="mt-0.5 block truncate text-sm font-semibold text-slate-700 dark:text-slate-200">{doc.title}</span>
+                </span>
+              </a>
+            ))}
+          </div>
+        </nav>
+      </aside>
+
+      <main class="min-w-0 space-y-6">
+        {docs.map((doc, index) => (
+          <section id={doc.id} data-document-section class="scroll-mt-24 overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <div class="flex items-center justify-between border-b border-slate-100 bg-slate-50/80 px-5 py-3 dark:border-slate-800 dark:bg-slate-950/60 sm:px-8">
+              <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                <span class="size-2 rounded-full bg-emerald-500"></span>
+                <span>{doc.label}</span><span class="text-slate-300 dark:text-slate-700">·</span><span>Markdown 文档</span>
+              </div>
+              <a href="#top" class="text-xs font-semibold text-slate-400 transition hover:text-emerald-600 dark:hover:text-emerald-300">返回顶部 ↑</a>
+            </div>
+            <article class="memorize-markdown prose prose-slate max-w-none px-5 py-7 dark:prose-invert sm:px-8 sm:py-10 lg:px-12" data-question-container>
+              <doc.markdown.Content />
+            </article>
+            {index < docs.length - 1 && (
+              <div class="border-t border-slate-100 px-5 py-4 dark:border-slate-800 sm:px-8 lg:px-12">
+                <a href={`#${docs[index + 1].id}`} class="inline-flex items-center gap-2 text-sm font-bold text-emerald-700 transition hover:gap-3 dark:text-emerald-300">下一篇：{docs[index + 1].title} <span aria-hidden="true">→</span></a>
+              </div>
+            )}
+          </section>
+        ))}
+      </main>
+    </div>
+  </div>
+
+  <div id="answer-modal" class="answer-modal fixed inset-0 z-[100] hidden items-center justify-center p-3 sm:p-6" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="answer-modal-title">
+    <button type="button" data-answer-close class="absolute inset-0 bg-slate-950/65 backdrop-blur-sm" aria-label="关闭答案弹窗"></button>
+    <section class="answer-panel relative z-10 flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-slate-900">
+      <header class="flex items-start justify-between gap-4 border-b border-slate-200 px-5 py-4 dark:border-slate-800 sm:px-7">
+        <div class="min-w-0">
+          <p class="text-xs font-bold uppercase tracking-[0.18em] text-emerald-600 dark:text-emerald-300">Interview Answer</p>
+          <h2 id="answer-modal-title" class="mt-1 pr-4 text-xl font-black text-slate-950 dark:text-white sm:text-2xl"></h2>
+          <p id="answer-modal-source" class="mt-2 truncate text-xs text-slate-400"></p>
+        </div>
+        <button type="button" data-answer-close class="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xl text-slate-500 transition hover:bg-slate-200 hover:text-slate-900 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white" aria-label="关闭答案弹窗">×</button>
+      </header>
+      <div class="overflow-y-auto px-5 py-6 sm:px-8 sm:py-8">
+        <article id="answer-modal-content" class="memorize-answer prose prose-slate max-w-none dark:prose-invert"></article>
+      </div>
+    </section>
+  </div>
+
+  <script id="answer-data" type="application/json" set:html={answerJson}></script>
+
+  <script>
+    type AnswerItem = { html: string; sourcePath: string };
+    type AnswerMap = Record<string, AnswerItem>;
+
+    const dataNode = document.getElementById('answer-data');
+    const answers: AnswerMap = dataNode?.textContent ? JSON.parse(dataNode.textContent) : {};
+    const modal = document.getElementById('answer-modal');
+    const modalTitle = document.getElementById('answer-modal-title');
+    const modalSource = document.getElementById('answer-modal-source');
+    const modalContent = document.getElementById('answer-modal-content');
+    let lastFocused: HTMLElement | null = null;
+
+    const openAnswer = (title: string) => {
+      const answer = answers[title];
+      if (!answer || !modal || !modalTitle || !modalSource || !modalContent) return;
+      lastFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      modalTitle.textContent = title;
+      modalSource.textContent = `来源：${answer.sourcePath}`;
+      modalContent.innerHTML = answer.html;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      modal.setAttribute('aria-hidden', 'false');
+      document.documentElement.classList.add('overflow-hidden');
+      modal.querySelector<HTMLButtonElement>('[data-answer-close]')?.focus();
+    };
+
+    const closeAnswer = () => {
+      if (!modal) return;
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      modal.setAttribute('aria-hidden', 'true');
+      document.documentElement.classList.remove('overflow-hidden');
+      lastFocused?.focus();
+    };
+
+    document.querySelectorAll<HTMLElement>('[data-question-container]').forEach((container) => {
+      const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+      const textNodes: Text[] = [];
+      let currentNode: Node | null;
+      while ((currentNode = walker.nextNode())) textNodes.push(currentNode as Text);
+
+      textNodes.forEach((textNode) => {
+        const text = textNode.nodeValue ?? '';
+        const pattern = /\[\[([^\]]+)\]\]/g;
+        if (!pattern.test(text)) return;
+        pattern.lastIndex = 0;
+
+        const fragment = document.createDocumentFragment();
+        let lastIndex = 0;
+        let match: RegExpExecArray | null;
+
+        while ((match = pattern.exec(text)) !== null) {
+          fragment.append(text.slice(lastIndex, match.index));
+          const title = match[1].split('|', 1)[0].split('#', 1)[0].trim();
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'question-trigger';
+          button.textContent = title;
+          button.dataset.questionTitle = title;
+          button.disabled = !answers[title];
+          if (!answers[title]) button.title = '暂未找到对应答案文档';
+          fragment.append(button);
+          lastIndex = pattern.lastIndex;
+        }
+
+        fragment.append(text.slice(lastIndex));
+        textNode.replaceWith(fragment);
+      });
+    });
+
+    document.addEventListener('click', (event) => {
+      const target = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-question-title]') : null;
+      if (target?.dataset.questionTitle) openAnswer(target.dataset.questionTitle);
+    });
+
+    document.querySelectorAll('[data-answer-close]').forEach((button) => button.addEventListener('click', closeAnswer));
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && modal?.getAttribute('aria-hidden') === 'false') closeAnswer();
+    });
+
+    const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-document-section]'));
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-directory-link]'));
+    const setActive = (id: string) => {
+      links.forEach((link) => {
+        const active = link.dataset.directoryLink === id;
+        link.classList.toggle('is-active', active);
+        link.setAttribute('aria-current', active ? 'true' : 'false');
+      });
+    };
+
+    if (sections.length > 0) {
+      setActive(sections[0].id);
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target instanceof HTMLElement) setActive(visible.target.id);
+      }, { rootMargin: '-18% 0px -68% 0px', threshold: [0, 0.1, 0.35, 0.6] });
+      sections.forEach((section) => observer.observe(section));
+    }
+  </script>
+</Layout>
+
+<style>
+  :global(html) { scroll-behavior: smooth; }
+  .directory-link:hover, .directory-link.is-active { background: rgb(236 253 245); }
+  .directory-link.is-active { box-shadow: inset 3px 0 0 rgb(16 185 129); }
+  :global(.dark) .directory-link:hover, :global(.dark) .directory-link.is-active { background: rgb(16 185 129 / 0.1); }
+  :global(.memorize-markdown > h1:first-child) { margin-top: 0; font-size: clamp(1.9rem, 3.4vw, 3rem); letter-spacing: -0.035em; }
+  :global(.memorize-markdown h2), :global(.memorize-answer h2) { margin-top: 2.25rem; border-bottom: 1px solid rgb(226 232 240); padding-bottom: 0.65rem; font-size: 1.25rem; }
+  :global(.dark .memorize-markdown h2), :global(.dark .memorize-answer h2) { border-color: rgb(51 65 85); }
+  :global(.memorize-markdown blockquote), :global(.memorize-answer blockquote) { border-left-color: rgb(16 185 129); border-radius: 0 1rem 1rem 0; background: rgb(236 253 245); padding: 0.9rem 1.1rem; color: rgb(51 65 85); font-style: normal; }
+  :global(.dark .memorize-markdown blockquote), :global(.dark .memorize-answer blockquote) { background: rgb(16 185 129 / 0.08); color: rgb(203 213 225); }
+  :global(.memorize-markdown table), :global(.memorize-answer table) { width: 100%; min-width: 640px; margin: 0; border-collapse: separate; border-spacing: 0; }
+  :global(.memorize-markdown table th), :global(.memorize-answer table th) { background: rgb(248 250 252); font-size: 0.78rem; }
+  :global(.dark .memorize-markdown table th), :global(.dark .memorize-answer table th) { background: rgb(15 23 42); }
+  :global(.memorize-markdown table th), :global(.memorize-markdown table td), :global(.memorize-answer table th), :global(.memorize-answer table td) { border-bottom: 1px solid rgb(226 232 240); padding: 0.75rem 0.9rem; }
+  :global(.dark .memorize-markdown table th), :global(.dark .memorize-markdown table td), :global(.dark .memorize-answer table th), :global(.dark .memorize-answer table td) { border-color: rgb(51 65 85); }
+  :global(.question-trigger) { display: inline; border: 0; padding: 0.1rem 0.3rem; border-radius: 0.45rem; background: rgb(236 253 245); color: rgb(4 120 87); font: inherit; font-weight: 700; line-height: inherit; text-align: left; cursor: pointer; transition: background-color 160ms ease, color 160ms ease, box-shadow 160ms ease; }
+  :global(.question-trigger:hover:not(:disabled)) { background: rgb(209 250 229); color: rgb(6 95 70); box-shadow: 0 0 0 2px rgb(16 185 129 / 0.14); }
+  :global(.question-trigger:focus-visible) { outline: 2px solid rgb(16 185 129); outline-offset: 2px; }
+  :global(.question-trigger:disabled) { background: rgb(254 243 199); color: rgb(161 98 7); cursor: not-allowed; opacity: 0.8; }
+  :global(.dark .question-trigger) { background: rgb(16 185 129 / 0.12); color: rgb(110 231 183); }
+  :global(.dark .question-trigger:hover:not(:disabled)) { background: rgb(16 185 129 / 0.22); color: rgb(167 243 208); }
+  :global(.dark .question-trigger:disabled) { background: rgb(245 158 11 / 0.12); color: rgb(252 211 77); }
+  @media (max-width: 1279px) { .directory-scroll { scrollbar-width: thin; } }
+  @media (prefers-reduced-motion: reduce) { :global(html) { scroll-behavior: auto; } }
+</style>
